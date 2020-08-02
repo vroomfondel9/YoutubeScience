@@ -181,8 +181,87 @@
 			
 		// HEATMAP
 		
-		function constructChart(canvasID) {
-		
+		function constructChart(canvasID, data) {
+			Chart.defaults.font.size = 9;
+			var ctx = $( "#" + canvasID ).get(0).getContext("2d");
+			window.myMatrix = new Chart(ctx, {
+				type: 'matrix',
+				data: {
+					datasets: [{
+						label: '',
+						data: [
+							{x: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAA', y: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXX', v: 11, max: 40},
+							{x: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAA', y: 'Y', v: 12, max: 50},
+							{x: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAA', y: 'Z', v: 13, max: 60},
+							{x: 'B', y: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXX', v: 21, max: 40},
+							{x: 'B', y: 'Y', v: 22, max: 50},
+							{x: 'B', y: 'Z', v: 23, max: 60},
+							{x: 'C', y: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXX', v: 31, max: 40},
+							{x: 'C', y: 'Y', v: 32, max: 50},
+							{x: 'C', y: 'Z', v: 33, max: 60}
+						],
+						backgroundColor(context) {
+							const datapoint = context.dataset.data[context.dataIndex];
+							const alpha = (datapoint.v - 5) / datapoint.max;
+							return Chart.helpers.color('blue').alpha(alpha).rgbString();
+						},
+						width(context) {
+							const a = context.chart.chartArea;
+							if (!a) {
+								return 0;
+							}
+							return (a.right - a.left) / 3 - 2;
+						},
+						height(context) {
+							const a = context.chart.chartArea;
+							if (!a) {
+								return 0;
+							}
+							return (a.bottom - a.top) / 3 - 2;
+						}
+					}]
+				},
+				options: {
+					legend: {
+						display: false
+					},
+					tooltips: {
+						callbacks: {
+							title() {
+								return 'Test title';
+							},
+							label(context) {
+								const v = context.dataset.data[context.dataIndex];
+								return ['x: ' + v.x, 'y: ' + v.y, 'v: ' + v.v];
+							}
+						}
+					},
+					scales: {
+						x: {
+							type: 'category',
+							labels: ['AAAAAAAAAAAAAAAAAAAAAAAAAAAA', 'B', 'C'],
+							ticks: {
+								display: true
+							},
+							gridLines: {
+								display: false
+							}
+						},
+						y: {
+							type: 'category',
+							labels: ['XXXXXXXXXXXXXXXXXXXXXXXXXXXX', 'Y', 'Z'],
+							offset: true,
+							reverse: false,
+							ticks: {
+								display: true
+							},
+							gridLines: {
+								display: false
+							}
+						}
+					}
+				}
+			});
 		}
 		
 
