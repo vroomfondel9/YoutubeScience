@@ -181,7 +181,19 @@
 			
 		// HEATMAP
 		
-		Chart.defaults.font.size = 9;
+
+		</script>
+	</head>
+	<body>
+		<h1>This is a test</h1>
+		<div id="canvas-holder">
+		  <canvas id="chart-area" width="400" height="100"></canvas>
+		</div>
+		<script type="text/javascript">
+			//getVideoIdsByKeyword('video games', 50);
+			console.log(getTestData());
+			
+					Chart.defaults.font.size = 9;
 		var ctx = $( "#chart-area" ).get(0).getContext("2d");
 			window.myMatrix = new Chart(ctx, {
 				type: 'matrix',
@@ -261,16 +273,6 @@
 					}
 				}
 			});
-		</script>
-	</head>
-	<body>
-		<h1>This is a test</h1>
-		<div id="canvas-holder">
-		  <canvas id="chart-area" width="400" height="100"></canvas>
-		</div>
-		<script type="text/javascript">
-			//getVideoIdsByKeyword('video games', 50);
-			console.log(getTestData());
 		</script>
 	</body>
 </html>
