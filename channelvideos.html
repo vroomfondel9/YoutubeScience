@@ -11,10 +11,10 @@
 			// YOUTUBE
 		
 			function getAllVideosForChannel(channelId) {
-				getAllVideosForChannelInternal(channelId, '', [], videoIdsForChannelComplete);
+				getAllVideosForChannelInternal(channelId, '', []);
 			}
 		
-			function getAllVideosForChannelInternal(channelId, pageToken, ongoingResults, onCompleteCallback) 
+			function getAllVideosForChannelInternal(channelId, pageToken, ongoingResults) 
 			{
 				$.ajax({
 					type: 'GET',
@@ -36,10 +36,10 @@
 						var nextPageToken = data.nextPageToken;
 						
 						if (!nextPageToken) {
-							onCompleteCallback(ongoingResults);
+							videoIdsForChannelComplete(ongoingResults);
 						}
 						else {
-							getAllVideosForChannelInternal(channelId, nextPageToken, ongoingResults, onCompleteCallback);
+							getAllVideosForChannelInternal(channelId, nextPageToken, ongoingResults);
 						}
 					},
 					error: function(response){
@@ -60,7 +60,7 @@
 				getVideoIdsByKeywordInternal(encodedQuery, maxResults, '', [], singleSearchComplete, channelVideoIds);
 			}
 		
-			function getVideoIdsByKeywordInternal(keyword, maxResults, pageToken, ongoingResults, onCompleteCallback, channelVideoIds) 
+			function getVideoIdsByKeywordInternal(keyword, maxResults, pageToken, ongoingResults, channelVideoIds) 
 			{
 				$.ajax({
 					type: 'GET',
@@ -81,15 +81,14 @@
 						var nextPageToken = data.nextPageToken;
 						
 						if ((ongoingResults.length >= maxResults) || (!nextPageToken)) {
-							onCompleteCallback(ongoingResults, maxResults, "keyword", channelVideoIds, keyword);
+							singleSearchSuccess(ongoingResults, maxResults, "keyword", channelVideoIds, keyword);
 						}
 						else {
-							getVideoIdsByKeywordInternal(keyword, maxResults, nextPageToken, ongoingResults, onCompleteCallback, channelVideoIds);
+							getVideoIdsByKeywordInternal(keyword, maxResults, nextPageToken, ongoingResults, channelVideoIds);
 						}
 					},
 					error: function(response){
-						console.error("Error on call " + (Math.floor(ongoingResults.length / 50) + 1) + " to search for videos by keyword.");
-						console.error(response.responseJSON.error.message);
+						singleSearchFailure(ongoingResults, maxResults, "keyword", channelVideoIds, relatedVideoId, response.responseJSON.error.message);
 					}
 				});
 			}
@@ -98,7 +97,7 @@
 				getVideoIdsByRelatedVideoIdInternal(relatedVideoId, maxResults, '', [], singleSearchComplete, channelVideoIds);
 			}
 		
-			function getVideoIdsByRelatedVideoIdInternal(relatedVideoId, maxResults, pageToken, ongoingResults, onCompleteCallback, channelVideoIds) 
+			function getVideoIdsByRelatedVideoIdInternal(relatedVideoId, maxResults, pageToken, ongoingResults, channelVideoIds) 
 			{
 				$.ajax({
 					type: 'GET',
@@ -119,15 +118,14 @@
 						var nextPageToken = data.nextPageToken;
 						
 						if ((ongoingResults.length >= maxResults) || (!nextPageToken)) {
-							onCompleteCallback(ongoingResults, maxResults, "related", channelVideoIds, relatedVideoId);
+							singleSearchSuccess(ongoingResults, maxResults, "related", channelVideoIds, relatedVideoId);
 						}
 						else {
-							getVideoIdsByRelatedVideoIdInternal(relatedVideoId, maxResults, nextPageToken, ongoingResults, onCompleteCallback, channelVideoIds);
+							getVideoIdsByRelatedVideoIdInternal(relatedVideoId, maxResults, nextPageToken, ongoingResults, channelVideoIds);
 						}
 					},
 					error: function(response){
-						console.error("Error on call " + (Math.floor(ongoingResults.length / 50) + 1) + " to search for videos by related video.");
-						console.error(response.responseJSON.error.message);
+						singleSearchFailure(ongoingResults, maxResults, "related", channelVideoIds, relatedVideoId, response.responseJSON.error.message);
 					}
 				});
 			}
@@ -140,25 +138,59 @@
 			//				.y (required by Chart.js - Channel video ID)
 			//				.v (required by Chart.js - ranking absolute value)
 			//				.max (max results determined by relevence threshold)
-			function singleSearchComplete(results, maxResults, type, channelVideoIds, context) {
+			function singleSearchFailure(partialResults, maxResults, type, channelVideoIds, context, details) {
+				console.error("Error on call " + (Math.floor(partialResults.length / 50) + 1) + " to search for videos by " + type + " with context " + context + ".");
+				console.error("Error Details: " + details);
+				
+				singleSearchCompleteInternal(partialResults, maxResults, type, channelVideoIds, context, 'Error', details);
+			}
+			
+			function singleSearchSuccess(results, maxResults, type, channelVideoIds, context) {
+				singleSearchCompleteInternal(results, maxResults, type, channelVideoIds, context, 'Not Found', 'Video is not relevant.");
+			}
+			
+			function singleSearchCompleteInternal(results, maxResults, type, channelVideoIds, context, notFoundReason, notFoundDetails) {
 				console.log("Found " + results.length + "/" + maxResults + " results for search by " + type + " for context" + context + ":");
 				
 				if (!data[type]) {
 					data[type] = {
 						type: type,
+						callsCompleted: 0,
 						data: []
 					};
 				}
 				
 				var max = (results.length < maxResults) ? results.length : maxResults;
 				
+				var ranking;
+				var reason;
+				var details;
 				for (var i = 0; i < channelVideoIds.length; i++) {
+					ranking = results.indexOf(channelVideoIds[i]) + 1;
+					
+					if (ranking == 0) {
+						reason = notFoundReason;
+						details = notFoundDetails;
+					} else {
+						reason = '';
+						details = '';
+					}
+					
 					data[type].data.push({
 						x: context,
 						y: channelVideoIds[i],
-						v: results.indexOf(channelVideoIds[i]) + 1,
-						max: max
+						v: ranking,
+						max: max,
+						notFoundReason: reason,
+						notFoundDetails: details
 					});
+				}
+				
+				data[type].callsCompleted++;
+				
+				//TODO put in actual dynamic threshold
+				if (data[type].callsCompleted == 1) {
+					constructChart(type);
 				}
 			}
 			
@@ -210,25 +242,17 @@
 			
 		// HEATMAP
 		
-		function constructChart(canvasID, data) {
+		function constructChart(type, data) {
+			var canvasID = type + "Heatmap";
 			Chart.defaults.font.size = 9;
 			var ctx = $( "#" + canvasID ).get(0).getContext("2d");
-			window["chart-" + canvasID] = new Chart(ctx, {
+			
+			window[canvasID] = new Chart(ctx, {
 				type: 'matrix',
 				data: {
 					datasets: [{
 						label: '',
-						data: [
-							{x: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAA', y: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXX', v: 11, max: 40},
-							{x: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAA', y: 'Y', v: 12, max: 50},
-							{x: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAA', y: 'Z', v: 13, max: 60},
-							{x: 'B', y: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXX', v: 21, max: 40},
-							{x: 'B', y: 'Y', v: 22, max: 50},
-							{x: 'B', y: 'Z', v: 23, max: 60},
-							{x: 'C', y: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXX', v: 31, max: 40},
-							{x: 'C', y: 'Y', v: 32, max: 50},
-							{x: 'C', y: 'Z', v: 33, max: 60}
-						],
+						data: data[type].data,
 						backgroundColor(context) {
 							const datapoint = context.dataset.data[context.dataIndex];
 							const alpha = (datapoint.v - 5) / datapoint.max;
@@ -299,14 +323,14 @@
 	<body>
 		<h1>This is a test</h1>
 		<div id="canvas-holder">
-		  <canvas id="chart-area" width="400" height="100"></canvas>
+		  <canvas id="relatedHeatmap" width="400" height="100"></canvas>
+		  <canvas id="keywordHeatmap" width="400" height="100"></canvas>
 		</div>
 		<script type="text/javascript">
 			//getVideoIdsByKeyword('video games', 50);
 			//console.log(getTestData());
 			//constructChart("chart-area");
 			singleSearchComplete(getTestData(), 50, "keywords", getChannelVideos(), "Learn Japanese");
-			console.log(data);
 		</script>
 	</body>
 </html>
