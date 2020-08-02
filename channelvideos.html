@@ -3,7 +3,7 @@
 		<title>Youtube Science</title>
 		<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 		<script type="text/javascript">
-			function getVideo() {
+			function getSearch() {
 			  $.ajax({
 				type: 'GET',
 				url: 'https://www.googleapis.com/youtube/v3/search',
@@ -16,12 +16,34 @@
 					videoEmbeddable: true,
 				},
 				success: function(data){
-					embedVideo(data)
+					logData(data)
 				},
 				error: function(response){
 					console.log("Request Failed");
 				}
 			  });
+			}
+			
+			function getVideo() {
+			  $.ajax({
+				type: 'GET',
+				url: 'https://www.googleapis.com/youtube/v3/videos',
+				data: {
+					key: 'AIzaSyBuUqltdabKn2nxyJNJYWsAyrcllzW4z58',
+					id: "gkT2LUYJXLE",
+					part: 'snippet'
+				},
+				success: function(data){
+					logData(data)
+				},
+				error: function(response){
+					console.log("Request Failed");
+				}
+			  });
+			}
+			
+			function logData(data) {
+				console.log(data);
 			}
 			
 			function embedVideo(data) {
@@ -37,7 +59,7 @@
 		<h3>Video Title</h3>
 		<p class="description">Video Description<p>
 		<script type="text/javascript">
-		getVideo();
+			getVideo();
 		</script>
 	</body>
 </html>
