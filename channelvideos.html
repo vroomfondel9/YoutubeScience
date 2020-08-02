@@ -3,64 +3,55 @@
 		<title>Youtube Science</title>
 		<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 		<script type="text/javascript">
-			function getSearch() {
-			  $.ajax({
-				type: 'GET',
-				url: 'https://www.googleapis.com/youtube/v3/search',
-				data: {
-					key: 'AIzaSyBuUqltdabKn2nxyJNJYWsAyrcllzW4z58',
-					q: "video games",
-					part: 'id',
-					maxResults: 1,
-					type: 'video',
-					videoEmbeddable: true,
-				},
-				success: function(data){
-					logData(data)
-				},
-				error: function(response){
-					console.error(response);
-				}
-			  });
+			function getVideoIdsByKeyword(keyword, maxResults) {
+				var encodedQuery = encodeURI(keyword);
+				getVideoIdsByKeywordInternal(encodedQuery, maxResults, '', [], getVideoIdsByKeywordComplete);
 			}
 			
-			function getVideo() {
-			  $.ajax({
-				type: 'GET',
-				url: 'https://www.googleapis.com/youtube/v3/videos',
-				data: {
-					key: 'AIzaSyBuUqltdabKn2nxyJNJYWsAyrcllzW4z58',
-					id: "gkT2LUYJXLE",
-					//part: 'fileDetails,contentDetails,id,liveStreamingDetails,localizations,player,processingDetails,recordingDetails,snippet,statistics,status,suggestions,topicDetails'
-					part: 'id'
-				},
-				success: function(data){
-					logData(data)
-				},
-				error: function(response){
-					console.error(response);
-				}
-			  });
+			function getVideoIdsByKeywordComplete(results, maxResults) {
+				console.log("Found " + results.length + "/" + maxResults + " results:");
+				console.log(results);
 			}
-			
-			function logData(data) {
-				console.log(data);
-			}
-			
-			function embedVideo(data) {
-				$('iframe').attr('src', 'https://www.youtube.com/embed/' + data.items[0].id.videoId)
-				$('h3').text(data.items[0].snippet.title)
-				$('.description').text(data.items[0].snippet.description)
+		
+			function getVideoIdsByKeywordInternal(keyword, maxResults, pageToken, ongoingResults, onCompleteCallback) 
+			{
+				$.ajax({
+					type: 'GET',
+					url: 'https://www.googleapis.com/youtube/v3/search',
+					data: {
+						key: 'AIzaSyBuUqltdabKn2nxyJNJYWsAyrcllzW4z58',
+						q: keyword,
+						part: 'id',
+						maxResults: 50,
+						pageToken: pageToken,
+						type: 'video'
+					},
+					success: function(data){
+						for (int i = 0; i < data.items.length; i++) {
+							ongoingResults.push(data.items[i].id.videoId);
+						}
+						
+						var nextPageToken = data.nextPageToken;
+						
+						if ((ongoingResults.length >= maxResults) || (!nextPageToken)) {
+							onCompleteCallback(ongoingResults, maxResults);
+						}
+						else {
+							getVideoIdsByKeywordInternal(keyword, maxResults, nextPageToken, ongoingResults, onCompleteCallback);
+						}
+					},
+					error: function(response){
+						console.error("Error on call " + (Math.floor(ongoingResults.length / 50) + 1) + " to search for videos by keyword.");
+						console.error(response.responseJSON.error.message);
+					}
+				});
 			}
 		</script>
 	</head>
 	<body>
 		<h1>This is a test</h1>
-		<iframe src=""></iframe>
-		<h3>Video Title</h3>
-		<p class="description">Video Description<p>
 		<script type="text/javascript">
-			getSearch();
+			getVideoIdsByKeyword('video games', 50);
 		</script>
 	</body>
 </html>
