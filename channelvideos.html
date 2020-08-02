@@ -43,6 +43,7 @@
 			}
 			
 			function videoIdsForChannelComplete(results) {
+				// TODO hook up videos
 				console.log("Found " + results.length + " results for channel:");
 				console.log(results);
 			}
@@ -130,12 +131,53 @@
 				console.log("Found " + results.length + "/" + maxResults + " results for search by " + type + ":");
 				console.log(results);
 			}
+			
+			//TODO delete
+			function getTestData() {
+				var videoIds = [
+				  "lML4i0BXASs",
+				  "gkT2LUYJXLE",
+				  "8-HlwY6SLeI",
+				  "eIjNrq5bzEI",
+				  "g974HQa_KmM",
+				  "eisgDzcAIW8",
+				  "i-s08yPS1fg",
+				  "miHNQqnObWE",
+				  "GI0YrbYyWcw",
+				  "tPTL_rHQpzU",
+				  "5YA-bHjCmhc",
+				  "21YiJA5e3d0",
+				  "peLGak1m-T8",
+				  "UW0fyG1o_Oc",
+				  "WmlzTg8kF9I",
+				  "GuiPFDHXX_M",
+				  "Z8ScIyTrMY4",
+				  "BbTaP9ty0Yk",
+				  "IDY9JakQYHo",
+				  "LYP8t9_O-AM",
+				  "qs2ngyJ3y48",
+				  "Ry7MEz384dU",
+				  "GB1BkptBr9w"
+				];
+				var testData = [];
+				
+				for (var i = 0; i < videoIds.length; i++) {
+					var rand = Math.floor(Math.random() * 5);
+					for (var j = 0; j < rand; j++) {
+						testData.push("Fake");
+					}
+					testData.push(videoIds[i]);
+				}
+				
+				return testData;
+			}
 		</script>
 	</head>
 	<body>
 		<h1>This is a test</h1>
 		<script type="text/javascript">
-			getVideoIdsByKeyword('video games', 50);
+			//getVideoIdsByKeyword('video games', 50);
+			console.log(getTestData());
 		</script>
 	</body>
 </html>
