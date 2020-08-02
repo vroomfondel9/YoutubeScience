@@ -181,7 +181,8 @@
 			
 		// HEATMAP
 		
-		var ctx = $( "#chart-area" ).getContext("2d");
+		Chart.defaults.font.size = 9;
+		var ctx = $( "#chart-area" ).get(0).getContext("2d");
 			window.myMatrix = new Chart(ctx, {
 				type: 'matrix',
 				data: {
