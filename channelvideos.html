@@ -6,6 +6,8 @@
 		<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix@next"></script>
 		<script type="text/javascript">
 		
+			var data = [];
+		
 			// YOUTUBE
 		
 			function getAllVideosForChannel(channelId) {
@@ -130,18 +132,41 @@
 				});
 			}
 			
+			// Data format:
+			//		.related or .keyword
+			//			.type ("related" or "keyword")
+			//			.data
+			//				.x (required by Chart.js - Keyword term or related video ID)
+			//				.y (required by Chart.js - Channel video ID)
+			//				.v (required by Chart.js - ranking absolute value)
+			//				.max (max results determined by relevence threshold)
 			function singleSearchComplete(results, maxResults, type, channelVideoIds, context) {
-				// TODO types may be "related" or "keyword"
-				// TODO results.length may not equal maxResults
 				console.log("Found " + results.length + "/" + maxResults + " results for search by " + type + " for context" + context + ":");
-				console.log(results);
+				
+				if (!data[type]) {
+					data[type] = {
+						type: type,
+						data: []
+					};
+				}
+				
+				var max = (results.length < maxResults) ? results.length : maxResults;
+				
+				for (var i = 0; i < channelVideoIds.length; i++) {
+					data[type].data.push({
+						x: context,
+						y: channelVideoIds[i],
+						v: results.indexOf(channelVideoIds[i]) + 1,
+						max: max
+					});
+				}
 			}
 			
-			// YOUTUBE -> HEATMAP TRANSFORMATIONS
+			// YOUTUBE -> HEATMAP DATA TRANSFORMATIONS
 			
 			//TODO delete
-			function getTestData() {
-				var videoIds = [
+			function getChannelVideos() {
+				return [
 				  "lML4i0BXASs",
 				  "gkT2LUYJXLE",
 				  "8-HlwY6SLeI",
@@ -166,6 +191,10 @@
 				  "Ry7MEz384dU",
 				  "GB1BkptBr9w"
 				];
+			}
+			
+			function getTestData() {
+				var videoIds = getChannelVideos();
 				var testData = [];
 				
 				for (var i = 0; i < videoIds.length; i++) {
@@ -184,7 +213,7 @@
 		function constructChart(canvasID, data) {
 			Chart.defaults.font.size = 9;
 			var ctx = $( "#" + canvasID ).get(0).getContext("2d");
-			window.myMatrix = new Chart(ctx, {
+			window["chart-" + canvasID] = new Chart(ctx, {
 				type: 'matrix',
 				data: {
 					datasets: [{
@@ -228,7 +257,7 @@
 					tooltips: {
 						callbacks: {
 							title() {
-								return 'Test title';
+								return 'Ranking';
 							},
 							label(context) {
 								const v = context.dataset.data[context.dataIndex];
@@ -274,8 +303,10 @@
 		</div>
 		<script type="text/javascript">
 			//getVideoIdsByKeyword('video games', 50);
-			console.log(getTestData());
-			constructChart("chart-area");
+			//console.log(getTestData());
+			//constructChart("chart-area");
+			singleSearchComplete(getTestData(), 50, "keywords", getChannelVideos(), "Learn Japanese");
+			console.log(data);
 		</script>
 	</body>
 </html>
