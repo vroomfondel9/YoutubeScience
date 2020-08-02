@@ -3,14 +3,53 @@
 		<title>Youtube Science</title>
 		<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 		<script type="text/javascript">
-			function getVideoIdsByKeyword(keyword, maxResults) {
-				var encodedQuery = encodeURI(keyword);
-				getVideoIdsByKeywordInternal(encodedQuery, maxResults, '', [], getVideoIdsByKeywordComplete);
+			function getAllVideosForChannel(channelId) {
+				getAllVideosForChannelInternal(channelId, '', [], videoIdsForChannelComplete);
+			}
+		
+			function getAllVideosForChannelInternal(channelId, pageToken, ongoingResults, onCompleteCallback) 
+			{
+				$.ajax({
+					type: 'GET',
+					url: 'https://www.googleapis.com/youtube/v3/search',
+					data: {
+						key: 'AIzaSyBuUqltdabKn2nxyJNJYWsAyrcllzW4z58',
+						channelId: channelId,
+						part: 'id',
+						order: 'date',
+						maxResults: 50,
+						pageToken: pageToken,
+						type: 'video'
+					},
+					success: function(data){
+						for (var i = 0; i < data.items.length; i++) {
+							ongoingResults.push(data.items[i].id.videoId);
+						}
+						
+						var nextPageToken = data.nextPageToken;
+						
+						if (!nextPageToken) {
+							onCompleteCallback(ongoingResults);
+						}
+						else {
+							getAllVideosForChannelInternal(channelId, nextPageToken, ongoingResults, onCompleteCallback);
+						}
+					},
+					error: function(response){
+						console.error("Error on call " + (Math.floor(ongoingResults.length / 50) + 1) + " to search for videos by keyword.");
+						console.error(response.responseJSON.error.message);
+					}
+				});
 			}
 			
-			function getVideoIdsByKeywordComplete(results, maxResults) {
-				console.log("Found " + results.length + "/" + maxResults + " results:");
+			function videoIdsForChannelComplete(results) {
+				console.log("Found " + results.length " results for channel:");
 				console.log(results);
+			}
+		
+			function getVideoIdsByKeyword(keyword, maxResults) {
+				var encodedQuery = encodeURI(keyword);
+				getVideoIdsByKeywordInternal(encodedQuery, maxResults, '', [], singleSearchComplete);
 			}
 		
 			function getVideoIdsByKeywordInternal(keyword, maxResults, pageToken, ongoingResults, onCompleteCallback) 
@@ -34,7 +73,7 @@
 						var nextPageToken = data.nextPageToken;
 						
 						if ((ongoingResults.length >= maxResults) || (!nextPageToken)) {
-							onCompleteCallback(ongoingResults, maxResults);
+							onCompleteCallback(ongoingResults, maxResults, "keyword");
 						}
 						else {
 							getVideoIdsByKeywordInternal(keyword, maxResults, nextPageToken, ongoingResults, onCompleteCallback);
@@ -45,6 +84,51 @@
 						console.error(response.responseJSON.error.message);
 					}
 				});
+			}
+			
+			function getVideoIdsByRelatedVideoId(relatedVideoId, maxResults) {
+				getVideoIdsByRelatedVideoIdInternal(relatedVideoId, maxResults, '', [], singleSearchComplete);
+			}
+		
+			function getVideoIdsByRelatedVideoIdInternal(relatedVideoId, maxResults, pageToken, ongoingResults, onCompleteCallback) 
+			{
+				$.ajax({
+					type: 'GET',
+					url: 'https://www.googleapis.com/youtube/v3/search',
+					data: {
+						key: 'AIzaSyBuUqltdabKn2nxyJNJYWsAyrcllzW4z58',
+						relatedToVideoId: relatedVideoId,
+						part: 'id',
+						maxResults: 50,
+						pageToken: pageToken,
+						type: 'video'
+					},
+					success: function(data){
+						for (var i = 0; i < data.items.length; i++) {
+							ongoingResults.push(data.items[i].id.videoId);
+						}
+						
+						var nextPageToken = data.nextPageToken;
+						
+						if ((ongoingResults.length >= maxResults) || (!nextPageToken)) {
+							onCompleteCallback(ongoingResults, maxResults, "related");
+						}
+						else {
+							getVideoIdsByRelatedVideoIdInternal(relatedVideoId, maxResults, nextPageToken, ongoingResults, onCompleteCallback);
+						}
+					},
+					error: function(response){
+						console.error("Error on call " + (Math.floor(ongoingResults.length / 50) + 1) + " to search for videos by related video.");
+						console.error(response.responseJSON.error.message);
+					}
+				});
+			}
+			
+			function singleSearchComplete(results, maxResults, type) {
+				// TODO types may be "related" or "keyword"
+				// TODO results.length may not equal maxResults
+				console.log("Found " + results.length + "/" + maxResults + " results for search by " + type + ":");
+				console.log(results);
 			}
 		</script>
 	</head>
