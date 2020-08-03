@@ -190,8 +190,7 @@
 			}
 		
 			function getVideoIdsByKeyword(keyword) {
-				var encodedQuery = encodeURI(keyword);
-				getVideoIdsByKeywordInternal(encodedQuery, '', []);
+				getVideoIdsByKeywordInternal(keyword, '', []);
 			}
 			
 			// Quota Cost: 100 per call
@@ -220,11 +219,11 @@
 							singleSearchSuccess(ongoingResults, "keyword", keyword);
 						}
 						else {
-							getVideoIdsByKeywordInternal(decodeURI(keyword), nextPageToken, ongoingResults);
+							getVideoIdsByKeywordInternal(keyword, nextPageToken, ongoingResults);
 						}
 					},
 					error: function(response){
-						singleSearchFailure(ongoingResults, "keyword", decodeURI(keyword), response.responseJSON.error.message);
+						singleSearchFailure(ongoingResults, "keyword", keyword, response.responseJSON.error.message);
 					}
 				});
 			}
