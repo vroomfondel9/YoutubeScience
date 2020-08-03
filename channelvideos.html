@@ -102,6 +102,8 @@
 			
 			function generate() {
 				$("#generate-input").addClass("hidden");
+				$("#generation-progress").attr("value", "0");
+				$("#generation-progress").removeClass("hidden");
 				
 				generationOptions = {
 					keywords: getTextAreaValueAsArray("keyword-input"),
@@ -113,8 +115,6 @@
 				
 				console.log(generationOptions);
 				
-				$("#generation-progress").attr("value", "0");
-				$("#generation-progress").removeClass("hidden");
 				
 				//TODO continue
 			}
