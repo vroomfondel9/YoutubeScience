@@ -162,7 +162,7 @@
 				var continueGenerating = true;
 			
 				// Error condition checking
-				generationOptions.validationFailures.noCorrelates = (keywords.length == 0) && (relatedIds.length == 0);
+				generationOptions.validationFailures.noCorrelates = (generationOptions.keywords.length == 0) && (generationOptions.relatedIds.length == 0);
 				generationOptions.validationFailures.maxResultsInvalid = isNaN(generationOptions.maxResults) ? true : (parseInt(generationOptions.maxResults) > 1);
 				
 				// Error behavior
