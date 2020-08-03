@@ -138,6 +138,8 @@
 				var match = youtubeURI.match(regEx);
 				var extracted = (match && match[1].length==24) ? match[1] : false;
 				
+				console.log(match);
+				
 				if (extracted) {
 					return {
 						channelId: extracted,
