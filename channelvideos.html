@@ -130,7 +130,7 @@
 				getAllVideosForChannelInternal(channelId, '', []);
 			}
 			
-			// Quota Cost: 2 per call
+			// Quota Cost: 100 per call
 			function getAllVideosForChannelInternal(channelId, pageToken, ongoingResults) 
 			{
 				$.ajax({
@@ -484,7 +484,7 @@ Test4</textarea>
 			</div>
 		</div>
 		<div id="progress-state">
-			<input type="button" id="generate-input" name="generate-input" value="Generate Heatmaps" onclick="javascript:generate();"/>
+			<input type="button" id="generate-input" name="generate-input" value="Generate Heatmaps" onclick="javascript:/*generate();*/ getVideoIdsByKeyword('learn japanese', 50, getChannelVideos());"/>
 			<progress id="generation-progress" value="0" max="100" class="hidden"/>
 		</div>
 		<div id="canvas-holder" class="hidden">
@@ -501,7 +501,7 @@ Test4</textarea>
 			//constructChart("chart-area");
 			//singleSearchSuccess(getTestData(), 50, "keyword", getChannelVideos(), "Learn Japanese");
 			//singleSearchSuccess(getTestData(), 50, "keyword", getChannelVideos(), "Donuts");
-			getAllVideosForChannel("UCsXJuG5tSNRr9IwfjMbNvqQ");
+			//getAllVideosForChannel("UCsXJuG5tSNRr9IwfjMbNvqQ");
 			//getVideoIdsByKeyword("learn japanese", 50, getChannelVideos());
 		</script>
 	</body>
