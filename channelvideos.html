@@ -101,9 +101,14 @@
 			
 			function generate() {
 				$("#generate-input").addClass("hidden");
-				$("#generation-progress").attr("value", "0");
-				$("#generation-progress").removeClass("hidden");
+				$("#canvas-holder").addClass("hidden");
+				$("#relatedHeatmap").addClass("hidden");
+				$("#keywordHeatmap").removeClass("hidden");
 				
+				$("#heatmap-type-keyword").prop("checked", true);
+				$("#heatmap-type-related").prop("checked", false);
+				
+				var data = [];
 				generationOptions = {
 					keywords: getTextAreaValueAsArray("keyword-input"),
 					relatedIds: youtubeURIToVideoId(getTextAreaValueAsArray("related-input")),
@@ -114,6 +119,8 @@
 				
 				console.log(generationOptions);
 				
+				$("#generation-progress").attr("value", "0");
+				$("#generation-progress").removeClass("hidden");
 				
 				//TODO continue
 			}
@@ -468,7 +475,7 @@ Test4</textarea>
 					</div>
 					<div id="resolve-names-area" class="input-area">
 						<label for="resolve-videos-input">Resolve Video Names</label>
-						<input type="checkbox" id="resolve-videos-input" name="resolve-videos-input" checked="checked"/>
+						<input type="checkbox" id="resolve-videos-input" name="resolve-videos-input" checked="true"/>
 					</div>
 				</div>
 			</div>
@@ -477,8 +484,8 @@ Test4</textarea>
 			<input type="button" id="generate-input" name="generate-input" value="Generate Heatmaps" onclick="javascript:generate();"/>
 			<progress id="generation-progress" value="0" max="100" class="hidden"/>
 		</div>
-		<div id="canvas-holder">
-			<input type="radio" id="heatmap-type-keyword" name="heatmap-type" value="keyword" checked />
+		<div id="canvas-holder" class="hidden">
+			<input type="radio" id="heatmap-type-keyword" name="heatmap-type" value="keyword" checked="true" />
 			<label for="heatmap-type-keyword" class="radio-label">Keyword Search</label>
 			<input type="radio" id="heatmap-type-related" name="heatmap-type" value="related" />
 			<label for="heatmap-type-related" class="radio-label">Related Videos</label>
@@ -489,8 +496,8 @@ Test4</textarea>
 			//getVideoIdsByKeyword('video games', 50);
 			//console.log(getTestData());
 			//constructChart("chart-area");
-			singleSearchSuccess(getTestData(), 50, "keyword", getChannelVideos(), "Learn Japanese");
-			singleSearchSuccess(getTestData(), 50, "keyword", getChannelVideos(), "Donuts");
+			//singleSearchSuccess(getTestData(), 50, "keyword", getChannelVideos(), "Learn Japanese");
+			//singleSearchSuccess(getTestData(), 50, "keyword", getChannelVideos(), "Donuts");
 		</script>
 	</body>
 </html>
