@@ -152,14 +152,53 @@
 				}
 			}
 			
+			function resetControls() {
+				$("#generation-progress").addClass("hidden");
+				$("#generate-input").removeClass("hidden");
+				console.log("===============================================================")
+			}
+			
+			function validateGenerationOptions() {
+				var continueGenerating = true;
+			
+				// Error condition checking
+				generationOptions.validationFailures.noCorrelates = (keywords.length == 0) && (relatedIds.length == 0);
+				generationOptions.validationFailures.maxResultsInvalid = isNaN(generationOptions.maxResults) ? true : (parseInt(generationOptions.maxResults) > 1);
+				
+				// Error behavior
+				if (generationOptions.validationFailures.invalidChannelId) {
+					alert('You must specify a valid Youtube channel URI to generate results.');
+					continueGenerating = false;
+				}
+				if (generationOptions.validationFailures.noCorrelates && (invalidRelatedURIs.length == 0)) {
+					alert('You must specify keyword search terms or related video URIs to generate results.');
+					continueGenerating = false;
+				}
+				else if (generationOptions.validationFailures.noCorrelates && (invalidRelatedURIs.length > 0)) {
+					alert('No keyword search terms specified and all related video URIs are invalid. Please fix them\nInvalid: ' + generationOptions.validationFailures.invalidRelatedURIs);
+					continueGenerating = false;
+				}
+				else if (generationOptions.validationFailures.maxResultsInvalid) {
+					alert('Max results must be a positive integer.');
+				}
+				
+				if (continueGenerating) {
+					if (invalidRelatedURIs.length > 0) {
+						alert("Results will not be generated for invalid related video IDs:\n" + generationOptions.validationFailures.invalidRelatedURIs);
+					}
+				}
+				
+				return continueGenerating;
+			}
+			
 			function generate() {
 				$("#generate-input").addClass("hidden");
-				$("#canvas-holder").addClass("hidden");
-				$("#relatedHeatmap").addClass("hidden");
-				$("#keywordHeatmap").removeClass("hidden");
+				$("#generation-progress").attr("value", "0");
+				$("#generation-progress").removeClass("hidden");
 				
-				$("#heatmap-type-keyword").prop("checked", true);
-				
+				console.log("===============================================================")
+				console.log("Generation Requested. Options:")
+			
 				var channelIdParseResults = youtubeURIToChannelId($("#channel-input").attr("value"));
 				var relatedVideoIdsParseResults = youtubeURIsToVideoIds(getTextAreaValueAsArray("related-input"));
 				
@@ -177,12 +216,17 @@
 					apiKey: $( "#youtube-acct-input option:selected" ).attr("value")
 				};
 				
+				if (validateGenerationOptions()) {
+					$("#canvas-holder").addClass("hidden");
+					$("#relatedHeatmap").addClass("hidden");
+					$("#keywordHeatmap").removeClass("hidden");
+					
+					$("#heatmap-type-keyword").prop("checked", true);
+				} else {
+					resetControls();
+				}
+				
 				console.log(generationOptions);
-				
-				$("#generation-progress").attr("value", "0");
-				$("#generation-progress").removeClass("hidden");
-				
-				//TODO continue
 			}
 		
 			// YOUTUBE
