@@ -268,14 +268,14 @@
 							if (!a) {
 								return 0;
 							}
-							return (a.right - a.left) / 3 - 2;
+							return (a.right - a.left) / data[type].labels.x.length - 2;
 						},
 						height(context) {
 							const a = context.chart.chartArea;
 							if (!a) {
 								return 0;
 							}
-							return (a.bottom - a.top) / 3 - 2;
+							return (a.bottom - a.top) / data[type].labels.y.length - 2;
 						}
 					}]
 				},
