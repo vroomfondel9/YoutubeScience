@@ -22,6 +22,10 @@
 				padding: 0.5%;
 			}
 			
+			.radio-label {
+				display: inline;
+			}
+			
 			#keyword-area {
 				width: 29%;
 			}
@@ -413,9 +417,9 @@ Test4
 		</div>
 		<div id="canvas-holder">
 			<input type="radio" id="heatmap-type-keyword" name="heatmap-type" value="keyword">
-			<label for="heatmap-type-keyword">Keyword Search</label>
+			<label for="heatmap-type-keyword" class="radio-label">Keyword Search</label>
 			<input type="radio" id="heatmap-type-related" name="heatmap-type" value="related">
-			<label for="heatmap-type-related">Related Videos</label>
+			<label for="heatmap-type-related" class="radio-label">Related Videos</label>
 			<canvas id="relatedHeatmap" width="400" height="150" style="display:none;"></canvas>
 			<canvas id="keywordHeatmap" width="400" height="150"></canvas>
 		</div>
