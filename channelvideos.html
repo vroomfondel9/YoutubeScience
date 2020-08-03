@@ -102,7 +102,7 @@
 				generationOptions = {
 					keywords: getTextAreaValueAsArray("keyword-input"),
 					relatedIds: youtubeURIToVideoId(getTextAreaValueAsArray("related-input")),
-					channelId: youtubeURIToVideoId([$("#channel-input").attr("value")][0])[0],
+					channelId: youtubeURIToVideoId([$("#channel-input").attr("value")])[0],
 					maxResults: $("#max-results-input").attr("value"),
 					resolveNames: $("#resolve-videos-input").is(":checked")
 				};
@@ -463,7 +463,7 @@ Test4</textarea>
 					</div>
 					<div id="resolve-names-area" class="input-area">
 						<label for="resolve-videos-input">Resolve Video Names</label>
-						<input type="checkbox" id="resolve-videos-input" name="resolve-videos-input" value="checked"/>
+						<input type="checkbox" id="resolve-videos-input" name="resolve-videos-input" checked="checked"/>
 					</div>
 				</div>
 			</div>
