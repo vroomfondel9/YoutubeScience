@@ -127,6 +127,7 @@
 						videoIds.push(extracted);
 					} else {
 						console.error("Could not extract video ID from given URI '" + curURI + "'.");
+						generationOptions.validationFailures.invalidRelatedURIs.push(curURI);
 					}
 				}
 				console.log(youtubeURIs);
@@ -148,6 +149,9 @@
 				
 				var data = [];
 				generationOptions = {
+					validationFailures = {
+						invalidRelatedURIs = []
+					},
 					keywords: getTextAreaValueAsArray("keyword-input"),
 					relatedIds: youtubeURIsToVideoIds(getTextAreaValueAsArray("related-input")),
 					channelId: youtubeURIToChannelId($("#channel-input").attr("value")),
