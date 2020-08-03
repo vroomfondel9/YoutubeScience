@@ -2,7 +2,10 @@
 	<head>
 		<title>Youtube Science</title>
 		<style type="text/css">
-		
+			label {
+				display: block;
+				text-align: center;
+			}
 		</style>
 		<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 		<script src="https://cdn.jsdelivr.net/npm/chart.js@next"></script>
@@ -332,22 +335,28 @@
 	<body>
 		<h1>This is a test</h1>
 		<div id="input-holder">
-			<label for="keyword-input">Search Keywords</label>
-			<textarea id="keyword-input" name="keyword-input" rows="4" cols="20">
-				Test1
-				Test2
-				Test3
-				Test4
-			</textarea>
-			<label for="related-input">Related Videos</label>
-			<textarea id="related-input" name="related-input" rows="4" cols="35">
-				Test1
-				Test2
-				Test3
-				Test4
-			</textarea>
-			<label for="channel-input">Youtube Channel</label>
-			<input type="text" id="channel-input" name="channel-input" value="https://www.youtube.com/channel/UCsXJuG5tSNRr9IwfjMbNvqQ"/>
+			<div id="keyword-area">
+				<label for="keyword-input">Search Keywords</label>
+				<textarea id="keyword-input" name="keyword-input" rows="4" cols="20">
+					Test1
+					Test2
+					Test3
+					Test4
+				</textarea>
+			</div>
+			<div id="related-area">
+				<label for="related-input">Related Videos</label>
+				<textarea id="related-input" name="related-input" rows="4" cols="35">
+					Test1
+					Test2
+					Test3
+					Test4
+				</textarea>
+			</div>
+			<div id="channel-area">
+				<label for="channel-input">Youtube Channel</label>
+				<input type="text" id="channel-input" name="channel-input" value="https://www.youtube.com/channel/UCsXJuG5tSNRr9IwfjMbNvqQ"/>
+			</div>
 		</div>
 		<div id="progress-state">
 			<input type="button" id="generate-input" name="generate-input" value="Generate"/>
