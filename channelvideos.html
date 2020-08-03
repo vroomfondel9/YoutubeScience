@@ -53,11 +53,15 @@
 			}
 			
 			#max-results-area {
-				width: 49%;
+				width: 32%;
 			}
 			
 			#resolve-names-area {
-				width: 49%;
+				width: 32%;
+			}
+			
+			#youtube-acct-area {
+				width: 32%;
 			}
 			
 			#advanced-options input {
@@ -113,7 +117,8 @@
 					relatedIds: youtubeURIToVideoId(getTextAreaValueAsArray("related-input")),
 					channelId: youtubeURIToChannelId($("#channel-input").attr("value")),
 					maxResults: $("#max-results-input").attr("value"),
-					resolveNames: $("#resolve-videos-input").is(":checked")
+					resolveNames: $("#resolve-videos-input").is(":checked"),
+					apiKey: $( "#myselect option:selected" ).attr("value")
 				};
 				
 				console.log(generationOptions);
@@ -137,7 +142,7 @@
 					type: 'GET',
 					url: 'https://www.googleapis.com/youtube/v3/search',
 					data: {
-						key: 'AIzaSyAraAc6Kl1LlO4yWCPS-kxswBiEZe1bVoo',
+						key: generationOptions.apiKey,
 						channelId: channelId,
 						part: 'id',
 						order: 'date',
@@ -184,7 +189,7 @@
 					type: 'GET',
 					url: 'https://www.googleapis.com/youtube/v3/search',
 					data: {
-						key: 'AIzaSyAraAc6Kl1LlO4yWCPS-kxswBiEZe1bVoo',
+						key: generationOptions.apiKey,
 						q: keyword,
 						part: 'id',
 						maxResults: 50,
@@ -215,13 +220,14 @@
 				getVideoIdsByRelatedVideoIdInternal(relatedVideoId, maxResults, '', [], channelVideoIds);
 			}
 		
+			// Quota Cost: 100 per call
 			function getVideoIdsByRelatedVideoIdInternal(relatedVideoId, maxResults, pageToken, ongoingResults, channelVideoIds) 
 			{
 				$.ajax({
 					type: 'GET',
 					url: 'https://www.googleapis.com/youtube/v3/search',
 					data: {
-						key: 'AIzaSyAraAc6Kl1LlO4yWCPS-kxswBiEZe1bVoo',
+						key: generationOptions.apiKey,
 						relatedToVideoId: relatedVideoId,
 						part: 'id',
 						maxResults: 50,
@@ -481,6 +487,12 @@ Test4</textarea>
 						<label for="resolve-videos-input">Resolve Video Names</label>
 						<input type="checkbox" id="resolve-videos-input" name="resolve-videos-input" checked="true"/>
 					</div>
+					<div id="youtube-acct-area" class="input-area">
+						<select name="youtube-acct-input" id="youtube-acct-input">
+							<option value="AIzaSyAraAc6Kl1LlO4yWCPS-kxswBiEZe1bVoo" selected="selected">Data API Quota 1</option>
+							<option value="AIzaSyBuUqltdabKn2nxyJNJYWsAyrcllzW4z58">Data API Quota 2</option>
+						</select>
+					<div>
 				</div>
 			</div>
 		</div>
