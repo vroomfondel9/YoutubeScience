@@ -170,11 +170,11 @@
 					alert('You must specify a valid Youtube channel URI to generate results.');
 					continueGenerating = false;
 				}
-				if (generationOptions.validationFailures.noCorrelates && (invalidRelatedURIs.length == 0)) {
+				if (generationOptions.validationFailures.noCorrelates && (generationOptions.validationFailures.invalidRelatedURIs.length == 0)) {
 					alert('You must specify keyword search terms or related video URIs to generate results.');
 					continueGenerating = false;
 				}
-				else if (generationOptions.validationFailures.noCorrelates && (invalidRelatedURIs.length > 0)) {
+				else if (generationOptions.validationFailures.noCorrelates && (generationOptions.validationFailures.invalidRelatedURIs.length > 0)) {
 					alert('No keyword search terms specified and all related video URIs are invalid. Please fix them\nInvalid: ' + generationOptions.validationFailures.invalidRelatedURIs);
 					continueGenerating = false;
 				}
@@ -183,7 +183,7 @@
 				}
 				
 				if (continueGenerating) {
-					if (invalidRelatedURIs.length > 0) {
+					if (generationOptions.validationFailures.invalidRelatedURIs.length > 0) {
 						alert("Results will not be generated for invalid related video IDs:\n" + generationOptions.validationFailures.invalidRelatedURIs);
 					}
 				}
