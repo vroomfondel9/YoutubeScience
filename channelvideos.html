@@ -85,7 +85,8 @@
 			// INPUT HANDLING
 			
 			function getTextAreaValueAsArray(id) {
-				console.log(id);
+				var value = $("#" + id).get(0).val();
+				console.log(value);
 				return "Hello World";
 			}
 			
@@ -105,7 +106,7 @@
 				generationOptions = {
 					keywords: getTextAreaValueAsArray("keyword-input"),
 					relatedIds: youtubeURIToVideoId(getTextAreaValueAsArray("related-input")),
-					channelId: youtubeURIToVideoId([$("#channel-input").attr("value")])[0],
+					channelId: youtubeURIToVideoId([$("#channel-input").attr("value")][0])[0],
 					maxResults: validateMaxResults($("#max-results-input").attr("value")),
 					resolveNames: $("#resolve-videos-input").is(":checked")
 				};
