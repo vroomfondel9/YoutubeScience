@@ -156,7 +156,11 @@
 					data[type] = {
 						type: type,
 						callsCompleted: 0,
-						data: []
+						data: [],
+						labels: {
+							x: [],
+							y: channelVideoIds
+						}
 					};
 				}
 				
@@ -186,6 +190,7 @@
 					});
 				}
 				
+				data[type].labels.x.push(context);
 				data[type].callsCompleted++;
 				
 				//TODO put in actual dynamic threshold
@@ -292,7 +297,7 @@
 					scales: {
 						x: {
 							type: 'category',
-							labels: ['AAAAAAAAAAAAAAAAAAAAAAAAAAAA', 'B', 'C'],
+							labels: data[type].labels.x,
 							ticks: {
 								display: true
 							},
@@ -302,7 +307,7 @@
 						},
 						y: {
 							type: 'category',
-							labels: ['XXXXXXXXXXXXXXXXXXXXXXXXXXXX', 'Y', 'Z'],
+							labels: data[type].labels.y,
 							offset: true,
 							reverse: false,
 							ticks: {
