@@ -106,7 +106,29 @@
 				return value.split("\n");
 			}
 			
-			function youtubeURIToVideoId(youtubeURIs) {
+			function youtube_parser(url){
+    var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+    var match = url.match(regExp);
+    return (match&&match[7].length==11)? match[7] : false;
+}
+			
+			function youtubeURIsToVideoIds(youtubeURIs) {
+				var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+				var videoIds = [];
+				
+				var curURI;
+				var match;
+				var extracted;
+				for (var i = 0; i < youtubeURIs.length; i++) {
+					curURI = youtubeURIs[i];
+					match = url.match(regExp);
+					extracted = (match && match[7].length==11) ? match[7] : false;
+					if (extracted) {
+						videoIds.push(extracted);
+					} else {
+						console.error("Could not extract video ID from given URI '" + curURI + "'.");
+					}
+				}
 				console.log(youtubeURIs);
 				return youtubeURIs;
 			}
@@ -127,7 +149,7 @@
 				var data = [];
 				generationOptions = {
 					keywords: getTextAreaValueAsArray("keyword-input"),
-					relatedIds: youtubeURIToVideoId(getTextAreaValueAsArray("related-input")),
+					relatedIds: youtubeURIsToVideoIds(getTextAreaValueAsArray("related-input")),
 					channelId: youtubeURIToChannelId($("#channel-input").attr("value")),
 					maxResults: $("#max-results-input").attr("value"),
 					resolveNames: $("#resolve-videos-input").is(":checked"),
@@ -251,7 +273,6 @@
 						}
 						
 						var nextPageToken = data.nextPageToken;
-						console.log(data);
 						
 						if ((ongoingResults.length >= generationOptions.maxResults) || (!nextPageToken)) {
 							singleSearchSuccess(ongoingResults, "related", relatedVideoId);
@@ -512,7 +533,7 @@ Test4</textarea>
 			</div>
 		</div>
 		<div id="progress-state">
-			<input type="button" id="generate-input" name="generate-input" value="Generate Heatmaps" onclick="javascript:generate(); generationOptions.maxResults=100; generationOptions.channelVideoIds=getChannelVideos(); getVideoIdsByRelatedVideoId('GB1BkptBr9w');"/>
+			<input type="button" id="generate-input" name="generate-input" value="Generate Heatmaps" onclick="javascript:generate(); generationOptions.maxResults=100; generationOptions.channelVideoIds=getChannelVideos(); /*getVideoIdsByRelatedVideoId('GB1BkptBr9w');*/"/>
 			<progress id="generation-progress" value="0" max="100" class="hidden"/>
 		</div>
 		<div id="canvas-holder" class="hidden">
