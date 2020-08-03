@@ -201,11 +201,11 @@
 							singleSearchSuccess(ongoingResults, maxResults, "keyword", channelVideoIds, keyword);
 						}
 						else {
-							getVideoIdsByKeywordInternal(keyword, maxResults, nextPageToken, ongoingResults, channelVideoIds);
+							getVideoIdsByKeywordInternal(decodeURI(keyword), maxResults, nextPageToken, ongoingResults, channelVideoIds);
 						}
 					},
 					error: function(response){
-						singleSearchFailure(ongoingResults, maxResults, "keyword", channelVideoIds, relatedVideoId, response.responseJSON.error.message);
+						singleSearchFailure(ongoingResults, maxResults, "keyword", channelVideoIds, decodeURI(keyword), response.responseJSON.error.message);
 					}
 				});
 			}
@@ -267,7 +267,7 @@
 			}
 			
 			function singleSearchCompleteInternal(results, maxResults, type, channelVideoIds, context, notFoundReason, notFoundDetails) {
-				console.log("Found " + results.length + "/" + maxResults + " results for search by " + type + " for context" + context + ":");
+				console.log("Found " + results.length + "/" + maxResults + " results for search by " + type + " for context '" + context + "':");
 				
 				if (!data[type]) {
 					data[type] = {
