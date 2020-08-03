@@ -121,7 +121,7 @@
 				var extracted;
 				for (var i = 0; i < youtubeURIs.length; i++) {
 					curURI = youtubeURIs[i];
-					match = url.match(regExp);
+					match = curURI.match(regExp);
 					extracted = (match && match[7].length==11) ? match[7] : false;
 					if (extracted) {
 						videoIds.push(extracted);
