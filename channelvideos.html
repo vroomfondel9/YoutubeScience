@@ -229,7 +229,7 @@
 				});
 			}
 			
-			function getVideoIdsByRelatedVideoId(relatedVideoId, channelVideoIds) {
+			function getVideoIdsByRelatedVideoId(relatedVideoId) {
 				getVideoIdsByRelatedVideoIdInternal(relatedVideoId, '', []);
 			}
 		
@@ -306,8 +306,8 @@
 				var ranking;
 				var reason;
 				var details;
-				for (var i = 0; i < channelVideoIds.length; i++) {
-					ranking = results.indexOf(channelVideoIds[i]) + 1;
+				for (var i = 0; i < generationOptions.channelVideoIds.length; i++) {
+					ranking = results.indexOf(generationOptions.channelVideoIds[i]) + 1;
 					
 					if (ranking == 0) {
 						reason = notFoundReason;
@@ -319,7 +319,7 @@
 					
 					data[type].data.push({
 						x: context,
-						y: channelVideoIds[i],
+						y: generationOptions.channelVideoIds[i],
 						v: ranking,
 						max: max,
 						notFoundReason: reason,
