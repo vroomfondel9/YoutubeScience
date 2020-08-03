@@ -194,7 +194,7 @@
 				data[type].callsCompleted++;
 				
 				//TODO put in actual dynamic threshold
-				if (data[type].callsCompleted == 1) {
+				if (data[type].callsCompleted == 2) {
 					constructChart(type);
 				}
 			}
@@ -297,7 +297,7 @@
 					scales: {
 						x: {
 							type: 'category',
-							labels: data[type].labels.x,
+							labels: data[type].labels.x.reverse(),
 							ticks: {
 								display: true
 							},
@@ -307,7 +307,7 @@
 						},
 						y: {
 							type: 'category',
-							labels: data[type].labels.y,
+							labels: data[type].labels.y.reverse(),
 							ticks: {
 								display: true
 							},
@@ -334,6 +334,7 @@
 			//console.log(getTestData());
 			//constructChart("chart-area");
 			singleSearchSuccess(getTestData(), 50, "keyword", getChannelVideos(), "Learn Japanese");
+			singleSearchSuccess(getTestData(), 50, "keyword", getChannelVideos(), "Donuts");
 		</script>
 	</body>
 </html>
