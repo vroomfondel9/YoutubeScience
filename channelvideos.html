@@ -142,12 +142,12 @@
 					console.error("Could not extract channel ID from given URI '" + youtubeURI + "'.");
 					return {
 						channelId: extracted,
-						extractionFailed = false
+						extractionFailed: false
 					};
 				} else {
 					return {
 						channelId: "",
-						extractionFailed = true
+						extractionFailed: true
 					};
 				}
 			}
