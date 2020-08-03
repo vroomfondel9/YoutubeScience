@@ -141,13 +141,13 @@
 				if (extracted) {
 					return {
 						channelId: extracted,
-						extractionFailed: false
+						invalidChannelId: false
 					};
 				} else {
 					console.error("Could not extract channel ID from given URI '" + youtubeURI + "'.");
 					return {
 						channelId: "",
-						extractionFailed: true
+						invalidChannelId: youtubeURI
 					};
 				}
 			}
@@ -167,7 +167,7 @@
 				generationOptions = {
 					validationFailures: {
 						invalidRelatedURIs: relatedVideoIdsParseResults.invalidURIs,
-						channelIdParseFailed: channelIdParseResults.extractionFailed
+						invalidChannelId: channelIdParseResults.invalidChannelId
 					},
 					keywords: getTextAreaValueAsArray("keyword-input"),
 					relatedIds: relatedVideoIdsParseResults.videoIds,
