@@ -174,7 +174,7 @@
 		
 			function getVideoIdsByKeyword(keyword, maxResults, channelVideoIds) {
 				var encodedQuery = encodeURI(keyword);
-				getVideoIdsByKeywordInternal(encodedQuery, maxResults, '', [], singleSearchComplete, channelVideoIds);
+				getVideoIdsByKeywordInternal(encodedQuery, maxResults, '', [], channelVideoIds);
 			}
 		
 			function getVideoIdsByKeywordInternal(keyword, maxResults, pageToken, ongoingResults, channelVideoIds) 
@@ -211,7 +211,7 @@
 			}
 			
 			function getVideoIdsByRelatedVideoId(relatedVideoId, maxResults, channelVideoIds) {
-				getVideoIdsByRelatedVideoIdInternal(relatedVideoId, maxResults, '', [], singleSearchComplete, channelVideoIds);
+				getVideoIdsByRelatedVideoIdInternal(relatedVideoId, maxResults, '', [], channelVideoIds);
 			}
 		
 			function getVideoIdsByRelatedVideoIdInternal(relatedVideoId, maxResults, pageToken, ongoingResults, channelVideoIds) 
