@@ -139,12 +139,12 @@
 				var extracted = (match && match[1].length==24) ? match[1] : false;
 				
 				if (extracted) {
-					console.error("Could not extract channel ID from given URI '" + youtubeURI + "'.");
 					return {
 						channelId: extracted,
 						extractionFailed: false
 					};
 				} else {
+					console.error("Could not extract channel ID from given URI '" + youtubeURI + "'.");
 					return {
 						channelId: "",
 						extractionFailed: true
