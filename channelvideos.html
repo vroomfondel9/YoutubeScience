@@ -94,6 +94,11 @@
 				return youtubeURIs;
 			}
 			
+			function youtubeURIToChannelId(youtubeURI) {
+				console.log(youtubeURI);
+				return youtubeURI;
+			}
+			
 			function generate() {
 				$("#generate-input").addClass("hidden");
 				$("#generation-progress").attr("value", "0");
@@ -102,7 +107,7 @@
 				generationOptions = {
 					keywords: getTextAreaValueAsArray("keyword-input"),
 					relatedIds: youtubeURIToVideoId(getTextAreaValueAsArray("related-input")),
-					channelId: youtubeURIToVideoId([$("#channel-input").attr("value")])[0],
+					channelId: youtubeURIToChannelId($("#channel-input").attr("value")),
 					maxResults: $("#max-results-input").attr("value"),
 					resolveNames: $("#resolve-videos-input").is(":checked")
 				};
