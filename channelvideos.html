@@ -114,7 +114,9 @@
 			
 			function youtubeURIsToVideoIds(youtubeURIs) {
 				var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+				
 				var videoIds = [];
+				var invalidURIs = [];
 				
 				var curURI;
 				var match;
@@ -127,11 +129,15 @@
 						videoIds.push(extracted);
 					} else {
 						console.error("Could not extract video ID from given URI '" + curURI + "'.");
-						generationOptions.validationFailures.invalidRelatedURIs.push(curURI);
+						invalidURIs.push(curURI);
 					}
 				}
+				
 				console.log(youtubeURIs);
-				return youtubeURIs;
+				return {
+					videoIds: videoIds,
+					invalidURIs: invalidURIs
+				};
 			}
 			
 			function youtubeURIToChannelId(youtubeURI) {
@@ -147,13 +153,15 @@
 				
 				$("#heatmap-type-keyword").prop("checked", true);
 				
+				var relatedVideoIdsParseResults = youtubeURIsToVideoIds(getTextAreaValueAsArray("related-input"));
+				
 				var data = [];
 				generationOptions = {
 					validationFailures: {
-						invalidRelatedURIs: []
+						invalidRelatedURIs: relatedVideoIdsParseResults.invalidURIs
 					},
 					keywords: getTextAreaValueAsArray("keyword-input"),
-					relatedIds: youtubeURIsToVideoIds(getTextAreaValueAsArray("related-input")),
+					relatedIds: relatedVideoIdsParseResults.videoIds,
 					channelId: youtubeURIToChannelId($("#channel-input").attr("value")),
 					maxResults: $("#max-results-input").attr("value"),
 					resolveNames: $("#resolve-videos-input").is(":checked"),
