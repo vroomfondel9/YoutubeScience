@@ -7,6 +7,10 @@
 				text-align: center;
 			}
 			
+			.input-area {
+				float:left;
+			}
+			
 			#keyword-area {
 				width: 30%;
 			}
@@ -17,6 +21,7 @@
 			
 			#channel-area {
 				width: 30%;
+				clear: both;
 			}
 		</style>
 		<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -347,7 +352,7 @@
 	<body>
 		<h1>This is a test</h1>
 		<div id="input-holder">
-			<div id="keyword-area">
+			<div id="keyword-area" class="input-area">
 				<label for="keyword-input">Search Keywords</label>
 				<textarea id="keyword-input" name="keyword-input" rows="4" cols="20">
 					Test1
@@ -356,7 +361,7 @@
 					Test4
 				</textarea>
 			</div>
-			<div id="related-area">
+			<div id="related-area" class="input-area">
 				<label for="related-input">Related Videos</label>
 				<textarea id="related-input" name="related-input" rows="4" cols="35">
 					Test1
@@ -365,7 +370,7 @@
 					Test4
 				</textarea>
 			</div>
-			<div id="channel-area">
+			<div id="channel-area" class="input-area">
 				<label for="channel-input">Youtube Channel</label>
 				<input type="text" id="channel-input" name="channel-input" value="https://www.youtube.com/channel/UCsXJuG5tSNRr9IwfjMbNvqQ"/>
 			</div>
