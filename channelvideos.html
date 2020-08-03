@@ -163,7 +163,7 @@
 			
 				// Error condition checking
 				generationOptions.validationFailures.noCorrelates = (generationOptions.keywords.length == 0) && (generationOptions.relatedIds.length == 0);
-				generationOptions.validationFailures.maxResultsInvalid = isNaN(generationOptions.maxResults) ? true : (parseInt(generationOptions.maxResults) > 1);
+				generationOptions.validationFailures.maxResultsInvalid = isNaN(parseInt(generationOptions.maxResults)) ? true : (parseInt(generationOptions.maxResults) > 1);
 				
 				// Error behavior
 				if (generationOptions.validationFailures.invalidChannelId) {
