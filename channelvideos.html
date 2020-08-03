@@ -215,6 +215,7 @@
 						}
 						
 						var nextPageToken = data.nextPageToken;
+						console.log('token: ' + nextPageToken);
 						
 						if ((ongoingResults.length >= maxResults) || (!nextPageToken)) {
 							singleSearchSuccess(ongoingResults, maxResults, "keyword", channelVideoIds, keyword);
