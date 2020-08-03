@@ -86,18 +86,12 @@
 			
 			function getTextAreaValueAsArray(id) {
 				var value = $("#" + id).val();
-				console.log(value.split("\n"));
-				return "Hello World";
+				return value.split("\n");
 			}
 			
 			function youtubeURIToVideoId(youtubeURIs) {
 				console.log(youtubeURIs);
-				return ["hello world"];
-			}
-			
-			function validateMaxResults(value) {
-				console.log(value);
-				return value;
+				return youtubeURIs;
 			}
 			
 			function generate() {
@@ -109,7 +103,7 @@
 					keywords: getTextAreaValueAsArray("keyword-input"),
 					relatedIds: youtubeURIToVideoId(getTextAreaValueAsArray("related-input")),
 					channelId: youtubeURIToVideoId([$("#channel-input").attr("value")][0])[0],
-					maxResults: validateMaxResults($("#max-results-input").attr("value")),
+					maxResults: $("#max-results-input").attr("value"),
 					resolveNames: $("#resolve-videos-input").is(":checked")
 				};
 				
