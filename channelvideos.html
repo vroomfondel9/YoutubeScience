@@ -391,11 +391,13 @@ Test4
 			</div>
 		</div>
 		<div id="progress-state">
-			<input type="button" id="generate-input" name="generate-input" value="Generate"/>
+			<input type="button" id="generate-input" name="generate-input" value="Generate Heatmaps"/>
 		</div>
 		<div id="canvas-holder">
-		  <canvas id="relatedHeatmap" width="400" height="150" style="display:none;"></canvas>
-		  <canvas id="keywordHeatmap" width="400" height="150"></canvas>
+			<input type="radio" id="heatmap-type-keyword" name="heatmap-type" value="Keyword Search">
+			<input type="radio" id="heatmap-type-related" name="heatmap-type" value="Related Videos">
+			<canvas id="relatedHeatmap" width="400" height="150" style="display:none;"></canvas>
+			<canvas id="keywordHeatmap" width="400" height="150"></canvas>
 		</div>
 		<script type="text/javascript">
 			//getVideoIdsByKeyword('video games', 50);
