@@ -13,8 +13,16 @@
 				height: 10%;
 			}
 			
+			progress {
+				width: 99%;
+			}
+			
 			input[type=text] {
 				width: 100%;
+			}
+			
+			.hidden {
+				display:none;
 			}
 			
 			.input-area {
@@ -72,6 +80,15 @@
 		<script type="text/javascript">
 		
 			var data = [];
+			var generationOptions;
+			
+			// INPUT HANDLING
+			
+			function generate() {
+				$("#generate-input").addClass("hidden");
+				$("#generation-progress").attr("value", "32");
+				$("#generation-progress").removeClass("hidden");
+			}
 		
 			// YOUTUBE
 		
@@ -427,14 +444,15 @@ Test4
 			</div>
 		</div>
 		<div id="progress-state">
-			<input type="button" id="generate-input" name="generate-input" value="Generate Heatmaps"/>
+			<input type="button" id="generate-input" name="generate-input" value="Generate Heatmaps" onclick="javascript:generate();"/>
+			<progress id="generation-progress" value="0" max="100" class="hidden"/>
 		</div>
 		<div id="canvas-holder">
 			<input type="radio" id="heatmap-type-keyword" name="heatmap-type" value="keyword" checked />
 			<label for="heatmap-type-keyword" class="radio-label">Keyword Search</label>
 			<input type="radio" id="heatmap-type-related" name="heatmap-type" value="related" />
 			<label for="heatmap-type-related" class="radio-label">Related Videos</label>
-			<canvas id="relatedHeatmap" width="400" height="150" style="display:none;"></canvas>
+			<canvas id="relatedHeatmap" width="400" height="150" class="hidden"></canvas>
 			<canvas id="keywordHeatmap" width="400" height="150"></canvas>
 		</div>
 		<script type="text/javascript">
