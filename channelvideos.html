@@ -129,7 +129,8 @@
 			function getAllVideosForChannel(channelId) {
 				getAllVideosForChannelInternal(channelId, '', []);
 			}
-		
+			
+			// Quota Cost: 2 per call
 			function getAllVideosForChannelInternal(channelId, pageToken, ongoingResults) 
 			{
 				$.ajax({
@@ -313,6 +314,9 @@
 				if (data[type].callsCompleted == 2) {
 					constructChart(type);
 				}
+				
+				console.log("Post partial data update:");
+				console.log(data);
 			}
 			
 			// YOUTUBE -> HEATMAP DATA TRANSFORMATIONS
@@ -497,7 +501,8 @@ Test4</textarea>
 			//constructChart("chart-area");
 			//singleSearchSuccess(getTestData(), 50, "keyword", getChannelVideos(), "Learn Japanese");
 			//singleSearchSuccess(getTestData(), 50, "keyword", getChannelVideos(), "Donuts");
-			getAllVideosForChannel("UCsXJuG5tSNRr9IwfjMbNvqQ");
+			//getAllVideosForChannel("UCsXJuG5tSNRr9IwfjMbNvqQ");
+			getVideoIdsByKeyword("learn japanese", 50, getChannelVideos());
 		</script>
 	</body>
 </html>
