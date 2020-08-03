@@ -213,7 +213,6 @@
 						}
 						
 						var nextPageToken = data.nextPageToken;
-						console.log(data);
 						
 						if ((ongoingResults.length >= generationOptions.maxResults) || (!nextPageToken)) {
 							singleSearchSuccess(ongoingResults, "keyword", keyword);
@@ -252,6 +251,7 @@
 						}
 						
 						var nextPageToken = data.nextPageToken;
+						console.log(data);
 						
 						if ((ongoingResults.length >= generationOptions.maxResults) || (!nextPageToken)) {
 							singleSearchSuccess(ongoingResults, "related", relatedVideoId);
