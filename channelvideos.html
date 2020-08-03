@@ -159,7 +159,6 @@
 						channelId: channelId,
 						part: 'id',
 						order: 'date',
-						maxResults: 50,
 						pageToken: pageToken,
 						type: 'video'
 					},
@@ -205,7 +204,7 @@
 						key: generationOptions.apiKey,
 						q: keyword,
 						part: 'id',
-						maxResults: 50,
+						maxResults: generationOptions.maxResults,
 						pageToken: pageToken,
 						type: 'video'
 					},
@@ -244,7 +243,7 @@
 						key: generationOptions.apiKey,
 						relatedToVideoId: relatedVideoId,
 						part: 'id',
-						maxResults: 50,
+						maxResults: generationOptions.maxResults,
 						pageToken: pageToken,
 						type: 'video'
 					},
