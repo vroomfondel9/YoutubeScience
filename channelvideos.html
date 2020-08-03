@@ -106,12 +106,6 @@
 				return value.split("\n");
 			}
 			
-			function youtube_parser(url){
-    var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-    var match = url.match(regExp);
-    return (match&&match[7].length==11)? match[7] : false;
-}
-			
 			function youtubeURIsToVideoIds(youtubeURIs) {
 				var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
 				
@@ -133,7 +127,6 @@
 					}
 				}
 				
-				console.log(youtubeURIs);
 				return {
 					videoIds: videoIds,
 					invalidURIs: invalidURIs
@@ -141,8 +134,22 @@
 			}
 			
 			function youtubeURIToChannelId(youtubeURI) {
-				console.log(youtubeURI);
-				return youtubeURI;
+				var regEx = /^(?:(http|https):\/\/[a-zA-Z-]*\.{0,1}[a-zA-Z-]{3,}\.[a-z]{2,})\/channel\/([a-zA-Z0-9_]{3,})$/;
+				var match = youtubeURI.match(regEx);
+				var extracted = (match && match[1].length==24) ? match[1] : false;
+				
+				if (extracted) {
+					console.error("Could not extract channel ID from given URI '" + youtubeURI + "'.");
+					return {
+						channelId: extracted,
+						extractionFailed = false
+					};
+				} else {
+					return {
+						channelId: "",
+						extractionFailed = true
+					};
+				}
 			}
 			
 			function generate() {
@@ -153,16 +160,18 @@
 				
 				$("#heatmap-type-keyword").prop("checked", true);
 				
+				var channelIdParseResults = youtubeURIToChannelId($("#channel-input").attr("value"));
 				var relatedVideoIdsParseResults = youtubeURIsToVideoIds(getTextAreaValueAsArray("related-input"));
 				
 				var data = [];
 				generationOptions = {
 					validationFailures: {
-						invalidRelatedURIs: relatedVideoIdsParseResults.invalidURIs
+						invalidRelatedURIs: relatedVideoIdsParseResults.invalidURIs,
+						channelIdParseFailed: channelIdParseResults.extractionFailed
 					},
 					keywords: getTextAreaValueAsArray("keyword-input"),
 					relatedIds: relatedVideoIdsParseResults.videoIds,
-					channelId: youtubeURIToChannelId($("#channel-input").attr("value")),
+					channelId: channelIdParseResults.channelId,
 					maxResults: $("#max-results-input").attr("value"),
 					resolveNames: $("#resolve-videos-input").is(":checked"),
 					apiKey: $( "#youtube-acct-input option:selected" ).attr("value")
