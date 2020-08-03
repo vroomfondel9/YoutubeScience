@@ -86,8 +86,25 @@
 			
 			function generate() {
 				$("#generate-input").addClass("hidden");
-				$("#generation-progress").attr("value", "32");
+				
+				generationOptions = {
+					keywords: getTextAreaValueAsArray("keyword-input"),
+					relatedIds: youtubeURIToVideoId(getTextAreaValueAsArray("related-input")),
+					channelId: youtubeURIToVideoId([$("#channel-input").attr("value")])[0],
+					maxResults: validateMaxResults($("#max-results-input").attr("value")),
+					resolveNames: $("#resolve-videos-input").is(":checked")
+				};
+				
+				console.log(generationOptions);
+				
+				$("#generation-progress").attr("value", "0");
 				$("#generation-progress").removeClass("hidden");
+				
+				//TODO continue
+			}
+			
+			function getTextAreaValueAsArray(id) {
+				
 			}
 		
 			// YOUTUBE
