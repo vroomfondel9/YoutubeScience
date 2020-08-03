@@ -412,8 +412,10 @@ Test4
 			<input type="button" id="generate-input" name="generate-input" value="Generate Heatmaps"/>
 		</div>
 		<div id="canvas-holder">
-			<input type="radio" id="heatmap-type-keyword" name="heatmap-type" value="Keyword Search">
-			<input type="radio" id="heatmap-type-related" name="heatmap-type" value="Related Videos">
+			<input type="radio" id="heatmap-type-keyword" name="heatmap-type" value="keyword">
+			<label for="heatmap-type-keyword">Keyword Search</label>
+			<input type="radio" id="heatmap-type-related" name="heatmap-type" value="related">
+			<label for="heatmap-type-related">Related Videos</label>
 			<canvas id="relatedHeatmap" width="400" height="150" style="display:none;"></canvas>
 			<canvas id="keywordHeatmap" width="400" height="150"></canvas>
 		</div>
