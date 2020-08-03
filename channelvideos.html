@@ -216,7 +216,10 @@
 					apiKey: $( "#youtube-acct-input option:selected" ).attr("value")
 				};
 				
-				if (validateGenerationOptions()) {
+				var valid = validateGenerationOptions();
+				console.log(generationOptions);
+				
+				if (valid) {
 					$("#canvas-holder").addClass("hidden");
 					$("#relatedHeatmap").addClass("hidden");
 					$("#keywordHeatmap").removeClass("hidden");
@@ -225,8 +228,6 @@
 				} else {
 					resetControls();
 				}
-				
-				console.log(generationOptions);
 			}
 		
 			// YOUTUBE
