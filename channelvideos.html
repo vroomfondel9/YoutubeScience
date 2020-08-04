@@ -455,7 +455,7 @@
 				}
 				
 				data[type].labels.x.push(context);
-				generationOptions.completedCalls.search[type][context] = true;
+				generationOptions.completedCalls.search[type].push(context);
 				
 				var keywordCompletions = generationOptions.completedCalls.search["keyword"];
 				var relatedCompletions = generationOptions.completedCalls.search["related"];
