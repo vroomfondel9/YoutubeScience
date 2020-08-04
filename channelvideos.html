@@ -449,9 +449,8 @@
 				data[type].callsCompleted++;
 				
 				//TODO put in actual dynamic threshold
-				if (data[type].callsCompleted == 8) {
-					constructChart("keyword");
-					constructChart("related");
+				if (data[type].callsCompleted == 4) {
+					constructChart(type);
 				}
 				
 				console.log("Post partial data update:");
@@ -580,6 +579,8 @@
 					}
 				}
 			});
+			
+			$("#canvas-holder").removeClass("hidden");
 		}
 		
 
