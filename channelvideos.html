@@ -510,7 +510,7 @@
 				var searchNum = generationOptions.completedCalls.search["keyword"].length 
 					+ generationOptions.completedCalls.search["related"].length;
 				var videoNameNum = generationOptions.completedCalls.videoNames["related"].length 
-					+ generationOptions.completedCalls.search["channel"].length;
+					+ generationOptions.completedCalls.videoNames["channel"].length;
 				var channelVideos = 1;
 				return '' + (searchNum + videoNameNum + channelVideos) / generationOptions.totalCallsNeeded;
 			}
