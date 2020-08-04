@@ -222,7 +222,17 @@
 					channelId: channelIdParseResults.channelId,
 					maxResults: $("#max-results-input").val(),
 					resolveNames: $("#resolve-videos-input").is(":checked"),
-					apiKey: $( "#youtube-acct-input option:selected" ).attr("value")
+					apiKey: $( "#youtube-acct-input option:selected" ).attr("value"),
+					completedCalls: {
+						search: [
+							"keyword" : [],
+							"related" : []
+						],
+						videoNames: [
+							"channel" : [],
+							"related" : []
+						]
+					}
 				};
 				
 				var valid = validateGenerationOptions();
@@ -294,9 +304,9 @@
 				console.log(results);
 				
 				$("#canvas-holder").addClass("hidden");
-				$("#relatedHeatmap").addClass("hidden");
+				$("#type-switcher-section").removeClass("hidden");
+				$("#relatedHeatmap").removeClass("hidden");
 				$("#keywordHeatmap").removeClass("hidden");
-				$("#heatmap-type-keyword").prop("checked", true);
 				
 				//TODO this is where you do video name resolution on both channel and related videos
 				
@@ -446,11 +456,32 @@
 				}
 				
 				data[type].labels.x.push(context);
-				data[type].callsCompleted++;
+				generationOptions.completedCalls.search[type][context] = true;
 				
-				//TODO put in actual dynamic threshold
-				if (data[type].callsCompleted == 4) {
-					constructChart(type);
+				var keywordCompletions = generationOptions.completedCalls.search["keyword"];
+				var relatedCompletions = generationOptions.completedCalls.search["related"];
+				if ((keywordCompletions.length == generationOptions.keywords.length) 
+						&& (relatedCompletions.length == generationOptions.relatedIds.length)) {
+					var hasKeyword = generationOptions.keywords.length > 0;
+					var hasRelated = generationOptions.keywords.length > 0;
+					
+					constructChart("keyword");
+					constructChart("related");
+					
+					if (hasKeyword && hasRelated) {
+						$("#relatedHeatmap").addClass("hidden");
+						$("#heatmap-type-keyword").prop("checked", true);
+					} else if (hasKeyword) {
+						$("#relatedHeatmap").addClass("hidden");
+						$("#type-switcher-section").addClass("hidden");
+						$("#heatmap-type-keyword").prop("checked", true);
+					} else {
+						$("#keywordHeatmap").addClass("hidden");
+						$("#type-switcher-section").addClass("hidden");
+						$("#heatmap-type-related").prop("checked", true);
+					}
+					
+					$("#canvas-holder").removeClass("hidden");
 				}
 				
 				console.log("Post partial data update:");
@@ -637,10 +668,12 @@ https://www.youtube.com/watch?v=-stbdKehONw</textarea>
 			<progress id="generation-progress" value="0" max="100" class="hidden"/>
 		</div>
 		<div id="canvas-holder" class="hidden">
-			<input type="radio" id="heatmap-type-keyword" name="heatmap-type" value="keyword" checked="true" />
-			<label for="heatmap-type-keyword" class="radio-label">Keyword Search</label>
-			<input type="radio" id="heatmap-type-related" name="heatmap-type" value="related" />
-			<label for="heatmap-type-related" class="radio-label">Related Videos</label>
+			<div id="type-switcher-section">
+				<input type="radio" id="heatmap-type-keyword" name="heatmap-type" value="keyword" checked="true" />
+				<label for="heatmap-type-keyword" class="radio-label" onchange="javascript: $('#relatedHeatmap').addClass('hidden'); $('#keywordHeatmap').removeClass('hidden');">Keyword Search</label>
+				<input type="radio" id="heatmap-type-related" name="heatmap-type" value="related" />
+				<label for="heatmap-type-related" class="radio-label" onchange="javascript: $('#relatedHeatmap').removeClass('hidden'); $('#keywordHeatmap').addClass('hidden');">Related Videos</label>
+			</div>
 			<canvas id="relatedHeatmap" width="400" height="150" class="hidden"></canvas>
 			<canvas id="keywordHeatmap" width="400" height="150"></canvas>
 		</div>
