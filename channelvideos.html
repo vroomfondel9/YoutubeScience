@@ -208,7 +208,7 @@
 				console.log("===============================================================")
 				console.log("Generation Requested. Options:")
 			
-				var channelIdParseResults = youtubeURIToChannelId($("#channel-input").attr("value"));
+				var channelIdParseResults = youtubeURIToChannelId($("#channel-input").val());
 				var relatedVideoIdsParseResults = youtubeURIsToVideoIds(getTextAreaValueAsArray("related-input"));
 				
 				var data = [];
