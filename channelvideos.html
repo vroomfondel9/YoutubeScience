@@ -420,7 +420,6 @@
 				if (!data[type]) {
 					data[type] = {
 						type: type,
-						callsCompleted: 0,
 						data: [],
 						labels: {
 							x: [],
@@ -486,6 +485,7 @@
 				
 				console.log("Post partial data update:");
 				console.log(data);
+				console.log(generationOptions);
 			}
 			
 			// YOUTUBE -> HEATMAP DATA TRANSFORMATIONS
