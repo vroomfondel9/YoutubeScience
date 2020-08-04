@@ -224,14 +224,14 @@
 					resolveNames: $("#resolve-videos-input").is(":checked"),
 					apiKey: $( "#youtube-acct-input option:selected" ).attr("value"),
 					completedCalls: {
-						search: [
+						search: {
 							"keyword" : [],
 							"related" : []
-						],
-						videoNames: [
+						},
+						videoNames: {
 							"channel" : [],
 							"related" : []
-						]
+						}
 					}
 				};
 				
