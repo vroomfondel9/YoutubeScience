@@ -189,9 +189,8 @@
 				var channelVideos = 1;
 				var searchNum = generationOptions.completedCalls.search["keyword"].length 
 					+ generationOptions.completedCalls.search["related"].length;
-				var result = (searchNum + videoNameNum + channelVideos) / generationOptions.totalCallsNeeded;
-				console.log("Progress: " + result);
-				return '' + result;
+				var result = ((searchNum + videoNameNum + channelVideos) / generationOptions.totalCallsNeeded) * 100;
+				return result;
 			}
 			
 			function validateGenerationOptions() {
@@ -484,7 +483,7 @@
 				
 				data[type].labels.x.push(context);
 				generationOptions.completedCalls.search[type].push(context);
-				$("#generation-progress").attr("value", calculateCurrentProgress());
+				$("#generation-progress").attr("value", "" + calculateCurrentProgress());
 				
 				var keywordCompletions = generationOptions.completedCalls.search["keyword"];
 				var relatedCompletions = generationOptions.completedCalls.search["related"];
