@@ -480,7 +480,7 @@
 				if ((keywordCompletions.length == generationOptions.keywords.length) 
 						&& (relatedCompletions.length == generationOptions.relatedIds.length)) {
 					var hasKeyword = generationOptions.keywords.length > 0;
-					var hasRelated = generationOptions.keywords.length > 0;
+					var hasRelated = generationOptions.relatedIds.length > 0;
 					console.log("Done! " + hasKeyword + "|" + hasRelated);
 					
 					if (hasKeyword) {
