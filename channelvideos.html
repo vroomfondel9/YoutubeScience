@@ -183,6 +183,17 @@
 				return searchNum + videoNameNum + channelVideoCalls;
 			}
 			
+			function calculateCurrentProgress() {
+				var videoNameNum = generationOptions.completedCalls.videoNames["related"].length 
+					+ generationOptions.completedCalls.videoNames["channel"].length;
+				var channelVideos = 1;
+				var searchNum = generationOptions.completedCalls.search["keyword"].length 
+					+ generationOptions.completedCalls.search["related"].length;
+				var result = (searchNum + videoNameNum + channelVideos) / generationOptions.totalCallsNeeded;
+				console.log("Progress: " + result);
+				return '' + result;
+			}
+			
 			function validateGenerationOptions() {
 				var continueGenerating = true;
 			
@@ -509,17 +520,6 @@
 				console.log("Post partial data update:");
 				console.log(data);
 				console.log(generationOptions);
-			}
-			
-			function calculateCurrentProgress() {
-				var searchNum = generationOptions.completedCalls.search["keyword"].length 
-					+ generationOptions.completedCalls.search["related"].length;
-				var videoNameNum = generationOptions.completedCalls.videoNames["related"].length 
-					+ generationOptions.completedCalls.videoNames["channel"].length;
-				var channelVideos = 1;
-				var result = (searchNum + videoNameNum + channelVideos) / generationOptions.totalCallsNeeded;
-				console.log("Progress: " + result);
-				return '' + result;
 			}
 			
 			// YOUTUBE -> HEATMAP DATA TRANSFORMATIONS
