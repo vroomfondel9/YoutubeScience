@@ -678,10 +678,10 @@ https://www.youtube.com/watch?v=-stbdKehONw</textarea>
 		</div>
 		<div id="canvas-holder" class="hidden">
 			<div id="type-switcher-section">
-				<input type="radio" id="heatmap-type-keyword" name="heatmap-type" value="keyword" checked="true" />
-				<label for="heatmap-type-keyword" class="radio-label" onchange="javascript: switchHeatmapTypes('keyword');">Keyword Search</label>
-				<input type="radio" id="heatmap-type-related" name="heatmap-type" value="related" />
-				<label for="heatmap-type-related" class="radio-label" onchange="javascript: switchHeatmapTypes('related');">Related Videos</label>
+				<input type="radio" id="heatmap-type-keyword" name="heatmap-type" value="keyword" checked="true" onchange="javascript: switchHeatmapTypes('keyword');"/>
+				<label for="heatmap-type-keyword" class="radio-label">Keyword Search</label>
+				<input type="radio" id="heatmap-type-related" name="heatmap-type" value="related" onchange="javascript: switchHeatmapTypes('related');"/>
+				<label for="heatmap-type-related" class="radio-label">Related Videos</label>
 			</div>
 			<canvas id="relatedHeatmap" width="400" height="150" class="hidden"></canvas>
 			<canvas id="keywordHeatmap" width="400" height="150"></canvas>
