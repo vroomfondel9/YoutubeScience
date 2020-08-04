@@ -481,7 +481,6 @@
 						&& (relatedCompletions.length == generationOptions.relatedIds.length)) {
 					var hasKeyword = generationOptions.keywords.length > 0;
 					var hasRelated = generationOptions.relatedIds.length > 0;
-					console.log("Done! " + hasKeyword + "|" + hasRelated);
 					
 					if (hasKeyword) {
 						constructChart("keyword");
@@ -518,7 +517,9 @@
 				var videoNameNum = generationOptions.completedCalls.videoNames["related"].length 
 					+ generationOptions.completedCalls.videoNames["channel"].length;
 				var channelVideos = 1;
-				return '' + (searchNum + videoNameNum + channelVideos) / generationOptions.totalCallsNeeded;
+				var result = (searchNum + videoNameNum + channelVideos) / generationOptions.totalCallsNeeded;
+				console.log("Progress: " + result);
+				return '' + result;
 			}
 			
 			// YOUTUBE -> HEATMAP DATA TRANSFORMATIONS
