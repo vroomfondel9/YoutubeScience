@@ -103,7 +103,16 @@
 			
 			function getTextAreaValueAsArray(id) {
 				var value = $("#" + id).val();
-				return value.split("\n");
+				var splitOnNewline = value.split("\n");
+				
+				var nonEmptyValues = [];
+				for (int i = 0; i < splitOnNewline.length; i++) {
+					if (splitOnNewline[i] != null && splitOnNewline[i].trim() != '') {
+						nonEmptyValues.push(splitOnNewline[i]);
+					}
+				}
+				
+				return nonEmptyValues;
 			}
 			
 			function youtubeURIsToVideoIds(youtubeURIs) {
