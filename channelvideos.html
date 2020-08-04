@@ -167,6 +167,14 @@
 				console.log("===============================================================")
 			}
 			
+			function switchHeatmapTypes(type) {
+				var toHide = type == "keyword" ? "#relatedHeatmap" : "#keywordHeatmap";
+				var toShow = type == "keyword" ? "#keywordHeatmap" : "#relatedHeatmap";
+				
+				$(toHide).addClass('hidden'); 
+				$(toShow).removeClass('hidden');
+			}
+			
 			function validateGenerationOptions() {
 				var continueGenerating = true;
 			
@@ -670,9 +678,9 @@ https://www.youtube.com/watch?v=-stbdKehONw</textarea>
 		<div id="canvas-holder" class="hidden">
 			<div id="type-switcher-section">
 				<input type="radio" id="heatmap-type-keyword" name="heatmap-type" value="keyword" checked="true" />
-				<label for="heatmap-type-keyword" class="radio-label" onchange="javascript: $('#relatedHeatmap').addClass('hidden'); $('#keywordHeatmap').removeClass('hidden');">Keyword Search</label>
+				<label for="heatmap-type-keyword" class="radio-label" onchange="javascript: switchHeatmapTypes('keyword');">Keyword Search</label>
 				<input type="radio" id="heatmap-type-related" name="heatmap-type" value="related" />
-				<label for="heatmap-type-related" class="radio-label" onchange="javascript: $('#relatedHeatmap').removeClass('hidden'); $('#keywordHeatmap').addClass('hidden');">Related Videos</label>
+				<label for="heatmap-type-related" class="radio-label" onchange="javascript: switchHeatmapTypes('related');">Related Videos</label>
 			</div>
 			<canvas id="relatedHeatmap" width="400" height="150" class="hidden"></canvas>
 			<canvas id="keywordHeatmap" width="400" height="150"></canvas>
