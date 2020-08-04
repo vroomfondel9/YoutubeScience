@@ -229,11 +229,7 @@
 				console.log(generationOptions);
 				
 				if (valid) {
-					$("#canvas-holder").addClass("hidden");
-					$("#relatedHeatmap").addClass("hidden");
-					$("#keywordHeatmap").removeClass("hidden");
-					
-					$("#heatmap-type-keyword").prop("checked", true);
+					getAllVideosForChannel(generationOptions.channelId);
 				} else {
 					resetControls();
 				}
@@ -267,23 +263,50 @@
 						var nextPageToken = data.nextPageToken;
 						
 						if (!nextPageToken) {
-							videoIdsForChannelComplete(ongoingResults);
+							videoIdsForChannelSuccess(ongoingResults);
 						}
 						else {
 							getAllVideosForChannelInternal(channelId, nextPageToken, ongoingResults);
 						}
 					},
 					error: function(response){
-						console.error("Error on call " + (Math.floor(ongoingResults.length / 50) + 1) + " to search for videos by keyword.");
-						console.error(response.responseJSON.error.message);
+						videoIdsForChannelFailure(ongoingResults, response.responseJSON.error.message);
 					}
 				});
 			}
 			
-			function videoIdsForChannelComplete(results) {
-				// TODO hook up videos
-				console.log("Found " + results.length + " results for channel:");
+			function videoIdsForChannelFailure(incompleteResults, failureReason) {
+				var msgs = [
+					"Error on call " + (Math.floor(incompleteResults.length / 50) + 1) + " to search for all videos for channel.",
+					"Error Details: " + failureReason
+				];
+				console.error(msgs[0]);
+				console.error(msgs[1]);
+				alert(msgs[0] + "\n" + msgs[1]);
+				
+				resetControls();
+			}
+			
+			function videoIdsForChannelSuccess(results) {
+				generationOptions.channelVideoIds = results;
+			
+				console.log("Found " + results.length + " videos for channel:");
 				console.log(results);
+				
+				$("#canvas-holder").addClass("hidden");
+				$("#relatedHeatmap").addClass("hidden");
+				$("#keywordHeatmap").removeClass("hidden");
+				$("#heatmap-type-keyword").prop("checked", true);
+				
+				//TODO this is where you do video name resolution on both channel and related videos
+				
+				for (var i = 0; i < generationOptions.keywords.length; i++) {
+					getVideoIdsByKeyword(generationOptions.keywords[i]);
+				}
+				
+				for (var i = 0; i < generationOptions.relatedIds.length; i++) {
+					getVideoIdsByRelatedVideoId(generationOptions.relatedIds[i]);
+				}
 			}
 		
 			function getVideoIdsByKeyword(keyword) {
@@ -426,8 +449,9 @@
 				data[type].callsCompleted++;
 				
 				//TODO put in actual dynamic threshold
-				if (data[type].callsCompleted == 2) {
-					constructChart(type);
+				if (data[type].callsCompleted == 8) {
+					constructChart("keyword");
+					constructChart("related");
 				}
 				
 				console.log("Post partial data update:");
