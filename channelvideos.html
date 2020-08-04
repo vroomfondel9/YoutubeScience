@@ -482,8 +482,13 @@
 					var hasKeyword = generationOptions.keywords.length > 0;
 					var hasRelated = generationOptions.keywords.length > 0;
 					
-					constructChart("keyword");
-					constructChart("related");
+					if (hasKeyword) {
+						constructChart("keyword");
+					}
+					
+					if (hasRelated) {
+						constructChart("related");
+					}
 					
 					if (hasKeyword && hasRelated) {
 						$("#relatedHeatmap").addClass("hidden");
