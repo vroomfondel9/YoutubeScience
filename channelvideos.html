@@ -175,7 +175,7 @@
 				generationOptions.validationFailures.maxResultsInvalid = isNaN(parseInt(generationOptions.maxResults)) ? true : (parseInt(generationOptions.maxResults) < 1);
 				
 				// Error behavior
-				if (generationOptions.validationFailures.invalidChannelId || (generationOptions.validationFailures.invalidChannelId == '')) {
+				if (generationOptions.validationFailures.invalidChannelId) {
 					alert('You must specify a valid Youtube channel URI to generate results.');
 					continueGenerating = false;
 				}
