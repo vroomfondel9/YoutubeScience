@@ -211,7 +211,7 @@
 					keywords: getTextAreaValueAsArray("keyword-input"),
 					relatedIds: relatedVideoIdsParseResults.videoIds,
 					channelId: channelIdParseResults.channelId,
-					maxResults: $("#max-results-input").attr("value"),
+					maxResults: $("#max-results-input").val(),
 					resolveNames: $("#resolve-videos-input").is(":checked"),
 					apiKey: $( "#youtube-acct-input option:selected" ).attr("value")
 				};
