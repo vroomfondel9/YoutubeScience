@@ -177,19 +177,15 @@
 			
 			function calculateTotalCallsNeeded() {
 				var searchNum = generationOptions.keywords.length + generationOptions.relatedIds.length;
-				//TODO fill this in...
-				var videoNameNum = 0;
 				var channelVideoCalls = 1;
-				return searchNum + videoNameNum + channelVideoCalls;
+				return searchNum + channelVideoCalls;
 			}
 			
 			function calculateCurrentProgress() {
-				var videoNameNum = generationOptions.completedCalls.videoNames["related"].length 
-					+ generationOptions.completedCalls.videoNames["channel"].length;
 				var channelVideos = 1;
 				var searchNum = generationOptions.completedCalls.search["keyword"].length 
 					+ generationOptions.completedCalls.search["related"].length;
-				var result = ((searchNum + videoNameNum + channelVideos) / generationOptions.totalCallsNeeded) * 100;
+				var result = ((searchNum + channelVideos) / generationOptions.totalCallsNeeded) * 100;
 				return result;
 			}
 			
@@ -249,13 +245,10 @@
 					maxResults: $("#max-results-input").val(),
 					resolveNames: $("#resolve-videos-input").is(":checked"),
 					apiKey: $( "#youtube-acct-input option:selected" ).attr("value"),
+					videoIdsToTitles: [],
 					completedCalls: {
 						search: {
 							"keyword" : [],
-							"related" : []
-						},
-						videoNames: {
-							"channel" : [],
 							"related" : []
 						}
 					}
@@ -278,7 +271,7 @@
 				getAllVideosForChannelInternal(channelId, '', []);
 			}
 			
-			// Quota Cost: 100 per call
+			// Quota Cost: 100 per call (with part='id' or part='snippet')
 			function getAllVideosForChannelInternal(channelId, pageToken, ongoingResults) 
 			{
 				$.ajax({
@@ -294,8 +287,16 @@
 						type: 'video'
 					},
 					success: function(data){
+						var curVidId;
+						var curVidTitle;
 						for (var i = 0; i < data.items.length; i++) {
-							ongoingResults.push(data.items[i].id.videoId);
+							curVidId = data.items[i].id.videoId;
+							ongoingResults.push(curVidId);
+							
+							if (generationOptions.resolveNames) {
+								curVidTitle = data.items[i].snippet.title;
+								generationOptions.videoIdsToTitles[curVidId] = curVidTitle;
+							}
 						}
 						
 						var nextPageToken = data.nextPageToken;
@@ -351,7 +352,7 @@
 				getVideoIdsByKeywordInternal(keyword, '', []);
 			}
 			
-			// Quota Cost: 100 per call
+			// Quota Cost: 100 per call (with part='id' or part='snippet')
 			function getVideoIdsByKeywordInternal(keyword, pageToken, ongoingResults) 
 			{
 				$.ajax({
@@ -366,8 +367,16 @@
 						type: 'video'
 					},
 					success: function(data){
+						var curVidId;
+						var curVidTitle;
 						for (var i = 0; i < data.items.length; i++) {
-							ongoingResults.push(data.items[i].id.videoId);
+							curVidId = data.items[i].id.videoId;
+							ongoingResults.push(curVidId);
+							
+							if (generationOptions.resolveNames) {
+								curVidTitle = data.items[i].snippet.title;
+								generationOptions.videoIdsToTitles[curVidId] = curVidTitle;
+							}
 						}
 						
 						var nextPageToken = data.nextPageToken;
@@ -389,7 +398,7 @@
 				getVideoIdsByRelatedVideoIdInternal(relatedVideoId, '', []);
 			}
 		
-			// Quota Cost: 100 per call
+			// Quota Cost: 100 per call (with part='id' or part='snippet')
 			function getVideoIdsByRelatedVideoIdInternal(relatedVideoId, pageToken, ongoingResults) 
 			{
 				$.ajax({
@@ -404,8 +413,16 @@
 						type: 'video'
 					},
 					success: function(data){
+						var curVidId;
+						var curVidTitle;
 						for (var i = 0; i < data.items.length; i++) {
-							ongoingResults.push(data.items[i].id.videoId);
+							curVidId = data.items[i].id.videoId;
+							ongoingResults.push(curVidId);
+							
+							if (generationOptions.resolveNames) {
+								curVidTitle = data.items[i].snippet.title;
+								generationOptions.videoIdsToTitles[curVidId] = curVidTitle;
+							}
 						}
 						
 						var nextPageToken = data.nextPageToken;
@@ -445,13 +462,19 @@
 			function singleSearchCompleteInternal(results, type, context, notFoundReason, notFoundDetails) {
 				console.log("Found " + results.length + "/" + generationOptions.maxResults + " results for search by " + type + " for context '" + context + "':");
 				
+				xValue = ((type == "related") && generationOptions.resolveNames) ? generationOptions.videoIdsToTitles[context] : context;
+				
 				if (!data[type]) {
+					var yValues = generationOptions.resolveNames ? 
+						generationOptions.channelVideoIds.map(function(item) {return generationOptions.videoIdsToTitles[item];}) 
+						: generationOptions.channelVideoIds;
+					
 					data[type] = {
 						type: type,
 						data: [],
 						labels: {
 							x: [],
-							y: generationOptions.channelVideoIds
+							y: yValues
 						}
 					};
 				}
@@ -461,6 +484,7 @@
 				var ranking;
 				var reason;
 				var details;
+				var yValue;
 				for (var i = 0; i < generationOptions.channelVideoIds.length; i++) {
 					ranking = results.indexOf(generationOptions.channelVideoIds[i]) + 1;
 					
@@ -472,9 +496,13 @@
 						details = '';
 					}
 					
+					yValue = generationOptions.resolveNames ? 
+						generationOptions.videoIdsToTitles[generationOptions.channelVideoIds[i]] 
+						: generationOptions.channelVideoIds[i];
+					
 					data[type].data.push({
-						x: context,
-						y: generationOptions.channelVideoIds[i],
+						x: xValue,
+						y: yValue,
 						v: ranking,
 						max: max,
 						notFoundReason: reason,
@@ -482,8 +510,8 @@
 					});
 				}
 				
-				data[type].labels.x.push(context);
-				generationOptions.completedCalls.search[type].push(context);
+				data[type].labels.x.push(xValue);
+				generationOptions.completedCalls.search[type].push(xValue);
 				$("#generation-progress").attr("value", "" + calculateCurrentProgress());
 				
 				var keywordCompletions = generationOptions.completedCalls.search["keyword"];
@@ -526,171 +554,125 @@
 				console.log(generationOptions);
 			}
 			
-			// YOUTUBE -> HEATMAP DATA TRANSFORMATIONS
+			// HEATMAP
 			
-			//TODO delete
-			function getChannelVideos() {
-				return [
-				  "lML4i0BXASs",
-				  "gkT2LUYJXLE",
-				  "8-HlwY6SLeI",
-				  "eIjNrq5bzEI",
-				  "g974HQa_KmM",
-				  "eisgDzcAIW8",
-				  "i-s08yPS1fg",
-				  "miHNQqnObWE",
-				  "GI0YrbYyWcw",
-				  "tPTL_rHQpzU",
-				  "5YA-bHjCmhc",
-				  "21YiJA5e3d0",
-				  "peLGak1m-T8",
-				  "UW0fyG1o_Oc",
-				  "WmlzTg8kF9I",
-				  "GuiPFDHXX_M",
-				  "Z8ScIyTrMY4",
-				  "BbTaP9ty0Yk",
-				  "IDY9JakQYHo",
-				  "LYP8t9_O-AM",
-				  "qs2ngyJ3y48",
-				  "Ry7MEz384dU",
-				  "GB1BkptBr9w"
-				];
-			}
+			function constructChart(type) {
+				// COLORS DEFINITION
+				const foundKeyword = '#3330ff';		//Alpha faded to white (irrelevant)
+				const foundRelated = '#ff9b30';		//Alpha faded to white (irrelevant)
+				const notFoundError = '#8a150c';	//Not alpha faded (but found partial results are alpha faded by type)
+				const noResults = '#030303';		//Not alpha faded
 			
-			function getTestData() {
-				var videoIds = getChannelVideos();
-				var testData = [];
+				var canvasID = type + "Heatmap";
+				Chart.defaults.font.size = 9;
+				var ctx = $( "#" + canvasID ).get(0).getContext("2d");
 				
-				for (var i = 0; i < videoIds.length; i++) {
-					var rand = Math.floor(Math.random() * 5);
-					for (var j = 0; j < rand; j++) {
-						testData.push("Fake");
-					}
-					testData.push(videoIds[i]);
-				}
-				
-				return testData;
-			}
-			
-		// HEATMAP
-		
-		function constructChart(type) {
-			// COLORS DEFINITION
-			const foundKeyword = '#3330ff';		//Alpha faded to white (irrelevant)
-			const foundRelated = '#ff9b30';		//Alpha faded to white (irrelevant)
-			const notFoundError = '#8a150c';	//Not alpha faded (but found partial results are alpha faded by type)
-			const noResults = '#030303';		//Not alpha faded
-		
-			var canvasID = type + "Heatmap";
-			Chart.defaults.font.size = 9;
-			var ctx = $( "#" + canvasID ).get(0).getContext("2d");
-			
-			window[canvasID] = new Chart(ctx, {
-				type: 'matrix',
-				data: {
-					datasets: [{
-						label: '',
-						data: data[type].data,
-						backgroundColor(context) {
-							const datapoint = context.dataset.data[context.dataIndex];
-							var foundColor = type == "keyword" ? foundKeyword : foundRelated;
-							
-							if (datapoint.notFoundReason == 'Error') {
-								return Chart.helpers.color(notFoundError).rgbString();
-							} else if (datapoint.max == 0) {
-								return Chart.helpers.color(noResults).rgbString();
-							} else {
-								var alpha;
-								if (datapoint.v > 0) {
-									alpha = 1.0 - ((datapoint.v - 1) / datapoint.max);
-								} else {
-									alpha = 0.0;
-								}
-								return Chart.helpers.color(foundColor).alpha(alpha).rgbString();
-							}
-						},
-						width(context) {
-							const a = context.chart.chartArea;
-							if (!a) {
-								return 0;
-							}
-							return (a.right - a.left) / data[type].labels.x.length - 2;
-						},
-						height(context) {
-							const a = context.chart.chartArea;
-							if (!a) {
-								return 0;
-							}
-							return (a.bottom - a.top) / data[type].labels.y.length - 2;
-						}
-					}]
-				},
-				options: {
-					legend: {
-						display: false
-					},
-					tooltips: {
-						callbacks: {
-							title() {
-								return 'Video Ranking';
-							},
-							label(context) {
-								const v = context.dataset.data[context.dataIndex];
+				window[canvasID] = new Chart(ctx, {
+					type: 'matrix',
+					data: {
+						datasets: [{
+							label: '',
+							data: data[type].data,
+							backgroundColor(context) {
+								const datapoint = context.dataset.data[context.dataIndex];
+								var foundColor = type == "keyword" ? foundKeyword : foundRelated;
 								
-								var xLabel = type == "keyword" ? "Search Term: " : "Related Video: ";
-								var rankingLabel;
-								var rankingValue;
-								
-								if (v.notFoundReason == 'Error') {
-									rankingLabel = 'Error: ';
-									rankingValue = v.notFoundDetails;
-								} else if (v.max == 0) {
-									rankingLabel = 'Ranking: ';
-									rankingValue = 'No search results found';
+								if (datapoint.notFoundReason == 'Error') {
+									return Chart.helpers.color(notFoundError).rgbString();
+								} else if (datapoint.max == 0) {
+									return Chart.helpers.color(noResults).rgbString();
 								} else {
-									if (v.v > 0) {
-										rankingLabel = 'Ranking: ';
-										rankingValue = v.v;
+									var alpha;
+									if (datapoint.v > 0) {
+										alpha = 1.0 - ((datapoint.v - 1) / datapoint.max);
 									} else {
-										rankingLabel = 'Ranking: ';
-										rankingValue = '>' + v.max;
+										alpha = 0.0;
 									}
+									return Chart.helpers.color(foundColor).alpha(alpha).rgbString();
 								}
-								
-								return [xLabel + v.x, 'Channel Video: ' + v.y, rankingLabel + rankingValue];
-							}
-						}
-					},
-					scales: {
-						x: {
-							type: 'category',
-							labels: data[type].labels.x,
-							position: 'top',
-							ticks: {
-								display: true
 							},
-							gridLines: {
-								display: false
+							width(context) {
+								const a = context.chart.chartArea;
+								if (!a) {
+									return 0;
+								}
+								return (a.right - a.left) / data[type].labels.x.length - 2;
+							},
+							height(context) {
+								const a = context.chart.chartArea;
+								if (!a) {
+									return 0;
+								}
+								return (a.bottom - a.top) / data[type].labels.y.length - 2;
+							}
+						}]
+					},
+					options: {
+						legend: {
+							display: false
+						},
+						tooltips: {
+							callbacks: {
+								title() {
+									return 'Video Ranking';
+								},
+								label(context) {
+									const v = context.dataset.data[context.dataIndex];
+									
+									var xLabel = type == "keyword" ? "Search Term: " : "Related Video: ";
+									var rankingLabel;
+									var rankingValue;
+									
+									if (v.notFoundReason == 'Error') {
+										rankingLabel = 'Error: ';
+										rankingValue = v.notFoundDetails;
+									} else if (v.max == 0) {
+										rankingLabel = 'Ranking: ';
+										rankingValue = 'No search results found';
+									} else {
+										if (v.v > 0) {
+											rankingLabel = 'Ranking: ';
+											rankingValue = v.v;
+										} else {
+											rankingLabel = 'Ranking: ';
+											rankingValue = '>' + v.max;
+										}
+									}
+									
+									return [xLabel + v.x, 'Channel Video: ' + v.y, rankingLabel + rankingValue];
+								}
 							}
 						},
-						y: {
-							type: 'category',
-							labels: data[type].labels.y,
-							offset: true,
-							reverse:false,
-							ticks: {
-								display: true
+						scales: {
+							x: {
+								type: 'category',
+								labels: data[type].labels.x,
+								position: 'top',
+								ticks: {
+									display: true
+								},
+								gridLines: {
+									display: false
+								}
 							},
-							gridLines: {
-								display: false
+							y: {
+								type: 'category',
+								labels: data[type].labels.y,
+								offset: true,
+								reverse:false,
+								ticks: {
+									display: true
+								},
+								gridLines: {
+									display: false
+								}
 							}
 						}
 					}
-				}
-			});
-			
-			$("#canvas-holder").removeClass("hidden");
-		}
+				});
+				
+				$("#canvas-holder").removeClass("hidden");
+			}
 		
 
 		</script>
