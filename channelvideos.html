@@ -574,6 +574,12 @@
 		// HEATMAP
 		
 		function constructChart(type) {
+			// COLORS DEFINITION
+			const foundKeyword = '#3330ff';		//Alpha faded to white (irrelevant)
+			const foundRelated = '#ff9b30';		//Alpha faded to white (irrelevant)
+			const notFoundError = '#ff0d00';	//Not alpha faded (but found partial results are alpha faded by type)
+			const noResults = '#030303';		//Not alpha faded
+		
 			var canvasID = type + "Heatmap";
 			Chart.defaults.font.size = 9;
 			var ctx = $( "#" + canvasID ).get(0).getContext("2d");
@@ -586,8 +592,11 @@
 						data: data[type].data,
 						backgroundColor(context) {
 							const datapoint = context.dataset.data[context.dataIndex];
+							if (datapoint.max == 0) {
+								
+							}
 							const alpha = (datapoint.v - 5) / datapoint.max;
-							return Chart.helpers.color('blue').alpha(alpha).rgbString();
+							return Chart.helpers.color('#3330ff').alpha(alpha).rgbString();
 						},
 						width(context) {
 							const a = context.chart.chartArea;
