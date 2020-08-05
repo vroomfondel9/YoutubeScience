@@ -631,6 +631,8 @@
 				var ctx = $( "#" + canvasID ).get(0).getContext("2d");
 				
 				if (window[canvasID] != null) {
+					console.log("WTF");
+					console.log(window[canvasID]);
 					window[canvasID].destroy();
 				}
 				
