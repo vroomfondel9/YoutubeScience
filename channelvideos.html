@@ -606,10 +606,6 @@
 					}
 					
 					$("#canvas-holder").removeClass("hidden");
-					
-					setTimeout(function() { 
-						resetControls();
-					}, 1000);
 				}
 				
 				console.log("Post partial data update:");
@@ -629,12 +625,6 @@
 				var canvasID = type + "Heatmap";
 				Chart.defaults.font.size = 9;
 				var ctx = $( "#" + canvasID ).get(0).getContext("2d");
-				
-				if (window["chartJS" + canvasID] != null) {
-					console.log("WTF");
-					console.log(window[canvasID]);
-					window[canvasID].destroy();
-				}
 				
 				window["chartJS" + canvasID] = new Chart(ctx, {
 					type: 'matrix',
