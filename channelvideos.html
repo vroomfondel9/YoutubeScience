@@ -631,11 +631,32 @@
 					tooltips: {
 						callbacks: {
 							title() {
-								return 'Ranking';
+								return 'Video Ranking';
 							},
 							label(context) {
 								const v = context.dataset.data[context.dataIndex];
-								return ['x: ' + v.x, 'y: ' + v.y, 'v: ' + v.v];
+								
+								var xLabel = type == "keyword" ? "Search Term: " : "Related Video: ";
+								var rankingLabel;
+								var rankingValue;
+								
+								if (v.notFoundReason == 'Error') {
+									rankingLabel = 'Error: ';
+									rankingValue = v.notFoundDetails;
+								} else if (v.max == 0) {
+									rankingLabel = 'Ranking: ';
+									rankingValue = 'No search results found';
+								} else {
+									if (v.v > 0) {
+										rankingLabel = 'Ranking: ';
+										rankingValue = v.v;
+									} else {
+										rankingLabel = 'Ranking: ';
+										rankingValue = '>' + v.max;
+									}
+								}
+								
+								return [xLabel + v.x, 'Channel Video: ' + v.y, rankingLabel + rankingValue];
 							}
 						}
 					},
