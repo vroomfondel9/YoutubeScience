@@ -630,13 +630,13 @@
 				Chart.defaults.font.size = 9;
 				var ctx = $( "#" + canvasID ).get(0).getContext("2d");
 				
-				if (window[canvasID] != null) {
+				if (window["chartJS" + canvasID] != null) {
 					console.log("WTF");
 					console.log(window[canvasID]);
 					window[canvasID].destroy();
 				}
 				
-				window[canvasID] = new Chart(ctx, {
+				window["chartJS" + canvasID] = new Chart(ctx, {
 					type: 'matrix',
 					data: {
 						datasets: [{
