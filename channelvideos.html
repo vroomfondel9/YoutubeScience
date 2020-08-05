@@ -592,11 +592,16 @@
 						data: data[type].data,
 						backgroundColor(context) {
 							const datapoint = context.dataset.data[context.dataIndex];
+							var foundColor = type == "keyword" ? foundKeyword : foundRelated;
+							
 							if (datapoint.max == 0) {
-								
+								return Chart.helpers.color(noResults).rgbString();
+							} else if (datapoint.notFoundReason == 'Error') {
+								return Chart.helpers.color(notFoundError).rgbString();
+							} else {
+								const alpha = 1.0 - ((datapoint.v - 1) / datapoint.max);
+								return Chart.helpers.color(foundColor).alpha(alpha).rgbString();
 							}
-							const alpha = (datapoint.v - 5) / datapoint.max;
-							return Chart.helpers.color('#3330ff').alpha(alpha).rgbString();
 						},
 						width(context) {
 							const a = context.chart.chartArea;
