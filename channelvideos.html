@@ -338,6 +338,8 @@
 				$("#keywordHeatmap").remove();
 				$("#keywordHeatmapTemplate").clone().appendTo("#canvas-holder").attr("id", "keywordHeatmap");
 				$("#relatedHeatmapTemplate").clone().appendTo("#canvas-holder").attr("id", "relatedHeatmap");
+				$("#relatedHeatmap").removeClass("hidden");
+				$("#keywordHeatmap").removeClass("hidden");
 				
 				return;
 				
