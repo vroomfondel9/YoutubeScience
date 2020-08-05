@@ -337,8 +337,14 @@
 				$("#relatedHeatmap").removeClass("hidden");
 				$("#keywordHeatmap").removeClass("hidden");
 				
-				//TODO this is where you do video name resolution on both channel and related videos
-				
+				if (generationOptions.resolveNames && (generationOptions.relatedIds.length > 0)) {
+					resolveRelatedVideoNames();
+				} else {
+					performSearches();
+				}
+			}
+			
+			function performSearches() {
 				for (var i = 0; i < generationOptions.keywords.length; i++) {
 					getVideoIdsByKeyword(generationOptions.keywords[i]);
 				}
@@ -346,6 +352,71 @@
 				for (var i = 0; i < generationOptions.relatedIds.length; i++) {
 					getVideoIdsByRelatedVideoId(generationOptions.relatedIds[i]);
 				}
+			}
+			
+			function resolveRelatedVideoNames() {
+				resolveRelatedVideoNamesInternal('');
+			}
+			
+			// Quota Cost: 1 per call (with part='id' or part='snippet')
+			function resolveRelatedVideoNamesInternal(pageToken) 
+			{
+				$.ajax({
+					type: 'GET',
+					url: 'https://www.googleapis.com/youtube/v3/videos',
+					data: {
+						key: generationOptions.apiKey,
+						id: generationOptions.relatedIds.join(),
+						part: 'snippet',
+						maxResults: 50,
+						pageToken: pageToken
+					},
+					success: function(data){
+						var curVidId;
+						var curVidTitle;
+						for (var i = 0; i < data.items.length; i++) {
+							curVidId = data.items[i].id;
+							curVidTitle = data.items[i].snippet.title;
+							generationOptions.videoIdsToTitles[curVidId] = curVidTitle;
+						}
+						
+						var nextPageToken = data.nextPageToken;
+						
+						if (!nextPageToken) {
+							resolveRelatedVideoNamesSuccess();
+						}
+						else {
+							resolveRelatedVideoNamesInternal(nextPageToken);
+						}
+					},
+					error: function(response){
+						resolveRelatedVideoNamesFailure(response.responseJSON.error.message);
+					}
+				});
+			}
+			
+			function resolveRelatedVideoNamesFailure(failureReason) {
+				var msgs = [
+					"Error on call to resolve related video names.",
+					"Error Details: " + failureReason,
+					"Falling back to using video IDs instead."
+				];
+				console.error(msgs[0]);
+				console.error(msgs[1]);
+				console.error(msgs[2]);
+				alert(msgs[0] + "\n" + msgs[1] + "\n" + msgs[2]);
+				
+				var curVidId;
+				for (var i = 0; i < generationOptions.relatedIds.length; i++) {
+					curVidId = generationOptions.relatedIds[i];
+					generationOptions.videoIdsToTitles[curVidId] = curVidId;
+				}
+				
+				resolveRelatedVideoNamesSuccess();
+			}
+			
+			function resolveRelatedVideoNamesSuccess() {
+				performSearches();
 			}
 		
 			function getVideoIdsByKeyword(keyword) {
@@ -361,22 +432,16 @@
 					data: {
 						key: generationOptions.apiKey,
 						q: keyword,
-						part: 'snippet',
+						part: 'id',
 						maxResults: generationOptions.maxResults,
 						pageToken: pageToken,
 						type: 'video'
 					},
 					success: function(data){
 						var curVidId;
-						var curVidTitle;
 						for (var i = 0; i < data.items.length; i++) {
 							curVidId = data.items[i].id.videoId;
 							ongoingResults.push(curVidId);
-							
-							if (generationOptions.resolveNames) {
-								curVidTitle = data.items[i].snippet.title;
-								generationOptions.videoIdsToTitles[curVidId] = curVidTitle;
-							}
 						}
 						
 						var nextPageToken = data.nextPageToken;
@@ -414,15 +479,9 @@
 					},
 					success: function(data){
 						var curVidId;
-						var curVidTitle;
 						for (var i = 0; i < data.items.length; i++) {
 							curVidId = data.items[i].id.videoId;
 							ongoingResults.push(curVidId);
-							
-							if (generationOptions.resolveNames) {
-								curVidTitle = data.items[i].snippet.title;
-								generationOptions.videoIdsToTitles[curVidId] = curVidTitle;
-							}
 						}
 						
 						var nextPageToken = data.nextPageToken;
