@@ -334,8 +334,12 @@
 				
 				$("#canvas-holder").addClass("hidden");
 				$("#type-switcher-section").removeClass("hidden");
-				$("#relatedHeatmap").removeClass("hidden");
-				$("#keywordHeatmap").removeClass("hidden");
+				$("#relatedHeatmap").remove();
+				$("#keywordHeatmap").remove();
+				$("#keywordHeatmapTemplate").clone().appendTo("#canvas-holder").attr("id", "keywordHeatmap");
+				$("#relatedHeatmapTemplate").clone().appendTo("#canvas-holder").attr("id", "keywordHeatmap");
+				
+				return;
 				
 				if (generationOptions.resolveNames && (generationOptions.relatedIds.length > 0)) {
 					resolveRelatedVideoNames();
@@ -795,8 +799,8 @@ https://www.youtube.com/watch?v=-stbdKehONw</textarea>
 				<input type="radio" id="heatmap-type-related" name="heatmap-type" value="related" onchange="javascript: switchHeatmapTypes('related');"/>
 				<label for="heatmap-type-related" class="radio-label">Related Videos</label>
 			</div>
-			<canvas id="relatedHeatmap" width="400" height="150" class="hidden"></canvas>
-			<canvas id="keywordHeatmap" width="400" height="150"></canvas>
 		</div>
+		<canvas id="relatedHeatmapTemplate" width="400" height="150" class="hidden"></canvas>
+		<canvas id="keywordHeatmapTemplate" width="400" height="150" class="hidden"></canvas>
 	</body>
 </html>
