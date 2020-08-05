@@ -630,6 +630,10 @@
 				Chart.defaults.font.size = 9;
 				var ctx = $( "#" + canvasID ).get(0).getContext("2d");
 				
+				if (window[canvasID] != null) {
+					window[canvasID].destroy();
+				}
+				
 				window[canvasID] = new Chart(ctx, {
 					type: 'matrix',
 					data: {
