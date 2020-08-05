@@ -599,7 +599,12 @@
 							} else if (datapoint.notFoundReason == 'Error') {
 								return Chart.helpers.color(notFoundError).rgbString();
 							} else {
-								const alpha = 1.0 - ((datapoint.v - 1) / datapoint.max);
+								var alpha;
+								if (datapoint.v > 0) {
+									alpha = 1.0 - ((datapoint.v - 1) / datapoint.max);
+								} else {
+									alpha = 0.0;
+								}
 								return Chart.helpers.color(foundColor).alpha(alpha).rgbString();
 							}
 						},
