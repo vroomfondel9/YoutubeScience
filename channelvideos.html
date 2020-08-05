@@ -594,10 +594,10 @@
 							const datapoint = context.dataset.data[context.dataIndex];
 							var foundColor = type == "keyword" ? foundKeyword : foundRelated;
 							
-							if (datapoint.max == 0) {
-								return Chart.helpers.color(noResults).rgbString();
-							} else if (datapoint.notFoundReason == 'Error') {
+							if (datapoint.notFoundReason == 'Error') {
 								return Chart.helpers.color(notFoundError).rgbString();
+							} else if (datapoint.max == 0) {
+								return Chart.helpers.color(noResults).rgbString();
 							} else {
 								var alpha;
 								if (datapoint.v > 0) {
