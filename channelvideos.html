@@ -636,7 +636,9 @@
 					type: 'matrix',
 					data: {
 						datasets: [{
-							label: 'Label added test',
+							label(context) {
+								return 'Context param added';
+							},
 							data: data[type].data,
 							backgroundColor(context) {
 								const datapoint = context.dataset.data[context.dataIndex];
@@ -783,9 +785,8 @@ Learn Japanese Vtuber</textarea>
 					<div id="youtube-acct-area" class="input-area">
 						<select name="youtube-acct-input" id="youtube-acct-input">
 							<option value="AIzaSyBuUqltdabKn2nxyJNJYWsAyrcllzW4z58" selected="selected">Leeched Quota 1</option>
-							<option value="AIzaSyAraAc6Kl1LlO4yWCPS-kxswBiEZe1bVoo">Non-Leeched Quota 1</option>
-							<option value="AIzaSyDQQiGIwi8KHNhvKfJoXOq9ex0z93tEaa8">Non-Leeched Quota 2</option>
-							<option value="AIzaSyDX1rDmgmObLtB0T6J8noKrsyHEZSs7VGA">Non-Leeched Quota 3</option>
+							<option value="AIzaSyDQQiGIwi8KHNhvKfJoXOq9ex0z93tEaa8">Non-Leeched Quota 1</option>
+							<option value="AIzaSyDX1rDmgmObLtB0T6J8noKrsyHEZSs7VGA">Non-Leeched Quota 2</option>
 						</select>
 					</div>
 				</div>
