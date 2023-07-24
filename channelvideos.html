@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<!-- https://vroomfondel9.github.io/YoutubeScience/channelvideos.html -->
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Youtube Science</title>
 		<style type="text/css">
@@ -634,9 +635,9 @@
 				
 				window["chartJS" + canvasID] = new Chart(ctx, {
 					type: 'matrix',
-					/*data: {
+					data: {
 						datasets: [{
-							label: '',
+							//label: '',
 							data: data[type].data,
 							backgroundColor(context) {
 								const datapoint = context.dataset.data[context.dataIndex];
@@ -671,8 +672,7 @@
 								return (a.bottom - a.top) / data[type].labels.y.length - 2;
 							}
 						}]
-					},*/
-					data: {datasets: [{data: data[type].data}]},
+					},
 					options: {
 						legend: {
 							display: false
