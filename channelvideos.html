@@ -633,12 +633,6 @@
 				Chart.defaults.font.size = 9;
 				var ctx = $( "#" + canvasID ).get(0).getContext("2d");
 				
-				const chartConfig = {
-				  type: 'matrix',
-				  data: chartData,
-				  options: chartOptions
-				};
-				
 				const chartData = {
 				  datasets: [{
 					label: 'My Matrix',
@@ -691,6 +685,12 @@
 					  top: 10,
 					}
 				  }
+				};
+				
+				const chartConfig = {
+				  type: 'matrix',
+				  data: chartData,
+				  options: chartOptions
 				};
 				
 				window["chartJS" + canvasID] = new Chart(ctx, chartConfig);
