@@ -638,10 +638,10 @@
 					data: {
 						datasets: [{
 							//label: '',
-							label(context) {
-								return 'constant';
-							},
 							data: data[type].data,
+							label(context) {
+								return 'constant2';
+							},
 							backgroundColor(context) {
 								const datapoint = context.dataset.data[context.dataIndex];
 								var foundColor = type == "keyword" ? foundKeyword : foundRelated;
