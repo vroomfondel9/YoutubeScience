@@ -650,12 +650,12 @@
 					backgroundColor(context) {
 					  const value = context.dataset.data[context.dataIndex].v;
 					  const alpha = (value - 5) / 40;
-					  return helpers.color('green').alpha(alpha).rgbString();
+					  return Chart.helpers.color('green').alpha(alpha).rgbString();
 					},
 					borderColor(context) {
 					  const value = context.dataset.data[context.dataIndex].v;
 					  const alpha = (value - 5) / 40;
-					  return helpers.color('darkgreen').alpha(alpha).rgbString();
+					  return Chart.helpers.color('darkgreen').alpha(alpha).rgbString();
 					},
 					borderWidth: 1,
 					width: ({chart}) => (chart.chartArea || {}).width / 3 - 1,
