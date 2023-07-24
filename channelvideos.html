@@ -696,11 +696,32 @@
 					  displayColors: false,
 					  callbacks: {
 						title() {
-						  return '';
+							return 'Video Ranking';
 						},
 						label(context) {
-						  const v = context.dataset.data[context.dataIndex];
-						  return ['d: ' + v.d, 'v: ' + v.v.toFixed(2)];
+							const v = context.dataset.data[context.dataIndex];
+							
+							var xLabel = type == "keyword" ? "Search Term: " : "Related Video: ";
+							var rankingLabel;
+							var rankingValue;
+							
+							if (v.notFoundReason == 'Error') {
+								rankingLabel = 'Error: ';
+								rankingValue = v.notFoundDetails;
+							} else if (v.max == 0) {
+								rankingLabel = 'Ranking: ';
+								rankingValue = 'No search results found';
+							} else {
+								if (v.v > 0) {
+									rankingLabel = 'Ranking: ';
+									rankingValue = v.v;
+								} else {
+									rankingLabel = 'Ranking: ';
+									rankingValue = '>' + v.max;
+								}
+							}
+							
+							return [xLabel + v.x, 'Channel Video: ' + v.y, rankingLabel + rankingValue];
 						}
 					  }
 					},
