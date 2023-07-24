@@ -633,11 +633,73 @@
 				Chart.defaults.font.size = 9;
 				var ctx = $( "#" + canvasID ).get(0).getContext("2d");
 				
-				window["chartJS" + canvasID] = new Chart(ctx, {
+				const chartConfig = {
+				  type: 'matrix',
+				  data: chartData,
+				  options: chartOptions
+				};
+				
+				const chartData = {
+				  datasets: [{
+					label: 'My Matrix',
+					data: [
+					  {x: 1, y: 1, v: 11},
+					  {x: 1, y: 2, v: 12},
+					  {x: 1, y: 3, v: 13},
+					  {x: 2, y: 1, v: 21},
+					  {x: 2, y: 2, v: 22},
+					  {x: 2, y: 3, v: 23},
+					  {x: 3, y: 1, v: 31},
+					  {x: 3, y: 2, v: 32},
+					  {x: 3, y: 3, v: 33}
+					],
+					backgroundColor(context) {
+					  const value = context.dataset.data[context.dataIndex].v;
+					  const alpha = (value - 5) / 40;
+					  return helpers.color('green').alpha(alpha).rgbString();
+					},
+					borderColor(context) {
+					  const value = context.dataset.data[context.dataIndex].v;
+					  const alpha = (value - 5) / 40;
+					  return helpers.color('darkgreen').alpha(alpha).rgbString();
+					},
+					borderWidth: 1,
+					width: ({chart}) => (chart.chartArea || {}).width / 3 - 1,
+					height: ({chart}) =>(chart.chartArea || {}).height / 3 - 1
+				  }]
+				};
+				
+				const chartOptions = {
+				  plugins: {
+					legend: false,
+					tooltip: {
+					  displayColors: false,
+					  callbacks: {
+						title() {
+						  return '';
+						},
+						label(context) {
+						  const v = context.dataset.data[context.dataIndex];
+						  return ['d: ' + v.d, 'v: ' + v.v.toFixed(2)];
+						}
+					  }
+					},
+				  },
+				  scales: scales,
+				  layout: {
+					padding: {
+					  top: 10,
+					}
+				  }
+				};
+				
+				window["chartJS" + canvasID] = new Chart(ctx, chartConfig);
+				
+				/*window["chartJS" + canvasID] = new Chart(ctx, {
 					type: 'matrix',
 					data: {
 						datasets: [{
-							label: 'No plz',
+							label: '',
 							data: data[type].data,
 							backgroundColor(context) {
 								const datapoint = context.dataset.data[context.dataIndex];
@@ -674,15 +736,13 @@
 						}]
 					},
 					options: {
-						legend: {
-							display: false
-						},
+						legend: false,
 						tooltips: {
 							callbacks: {
 								title() {
 									return 'Video Ranking';
 								},
-								/*label(context) {
+								label(context) {
 									const v = context.dataset.data[context.dataIndex];
 									
 									var xLabel = type == "keyword" ? "Search Term: " : "Related Video: ";
@@ -706,7 +766,7 @@
 									}
 									
 									return [xLabel + v.x, 'Channel Video: ' + v.y, rankingLabel + rankingValue];
-								}*/
+								}
 								label(context) {
 									return ["Let's try this"];
 								}
@@ -738,7 +798,7 @@
 							}
 						}
 					}
-				});
+				});*/
 				
 				$("#canvas-holder").removeClass("hidden");
 			}
