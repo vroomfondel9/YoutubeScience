@@ -638,6 +638,9 @@
 					data: {
 						datasets: [{
 							//label: '',
+							label(context) {
+								return 'constant';
+							},
 							data: data[type].data,
 							backgroundColor(context) {
 								const datapoint = context.dataset.data[context.dataIndex];
