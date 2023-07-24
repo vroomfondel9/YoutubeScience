@@ -639,9 +639,6 @@
 						datasets: [{
 							//label: '',
 							data: data[type].data,
-							label(context) {
-								return 'constant2';
-							},
 							backgroundColor(context) {
 								const datapoint = context.dataset.data[context.dataIndex];
 								var foundColor = type == "keyword" ? foundKeyword : foundRelated;
@@ -685,7 +682,7 @@
 								title() {
 									return 'Video Ranking';
 								},
-								label(context) {
+								/*label(context) {
 									const v = context.dataset.data[context.dataIndex];
 									
 									var xLabel = type == "keyword" ? "Search Term: " : "Related Video: ";
@@ -709,6 +706,9 @@
 									}
 									
 									return [xLabel + v.x, 'Channel Video: ' + v.y, rankingLabel + rankingValue];
+								}*/
+								label(context) {
+									return ["Let's try this"];
 								}
 							}
 						},
