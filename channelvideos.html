@@ -150,7 +150,7 @@
 			}
 			
 			function youtubeURIToChannelId(youtubeURI) {
-				var regEx = /^(?:(http|https):\/\/[a-zA-Z-]*\.{0,1}[a-zA-Z-]{3,}\.[a-z]{2,})\/channel\/([a-zA-Z0-9_]{3,})$/;
+				var regEx = /^(?:(http|https):\/\/[a-zA-Z-]*\.{0,1}[a-zA-Z-]{3,}\.[a-z]{2,})\/channel\/([a-zA-Z0-9_-]{3,})$/;
 				var match = youtubeURI.match(regEx);
 				var extracted = (match) ? match[2] : false;
 				
